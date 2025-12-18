@@ -17,13 +17,10 @@
       --shadow: 0 20px 60px rgba(0,0,0,.45);
       --brand:#7c5cff;
       --brand2:#22d3ee;
-      --user:#1f2a55;
-      --bot:#101a3f;
       --danger:#ff4d6d;
       --ok:#34d399;
       --radius:18px;
     }
-
     *{box-sizing:border-box}
     body{
       margin:0;
@@ -39,7 +36,6 @@
       justify-content:center;
       padding:28px 18px;
     }
-
     .app{
       width:min(980px, 100%);
       display:grid;
@@ -51,7 +47,6 @@
       box-shadow: var(--shadow);
       overflow:hidden;
     }
-
     header{
       display:flex;
       align-items:center;
@@ -61,34 +56,29 @@
       border-bottom:1px solid var(--border);
       backdrop-filter: blur(10px);
     }
-
     .brand{
       display:flex; align-items:center; gap:12px;
       min-width:0;
     }
-
     .logo{
       width:38px; height:38px;
       border-radius:12px;
       background: linear-gradient(135deg, var(--brand), var(--brand2));
       display:grid; place-items:center;
-      font-weight:800;
+      font-weight:900;
       color:#061022;
       box-shadow: 0 10px 30px rgba(124,92,255,.25);
-      flex:0 0 auto;
       overflow:hidden;
+      flex:0 0 auto;
     }
-
     .logo img{
       width:100%; height:100%; object-fit:cover;
-      display:none; /* se activa cuando pongas tu logo */
+      display:none;
     }
-
     .titles{
       display:flex; flex-direction:column;
       min-width:0;
     }
-
     .titles h1{
       font-size:16px;
       margin:0;
@@ -98,7 +88,6 @@
       overflow:hidden;
       text-overflow:ellipsis;
     }
-
     .titles p{
       margin:2px 0 0;
       font-size:12px;
@@ -107,12 +96,10 @@
       overflow:hidden;
       text-overflow:ellipsis;
     }
-
     .actions{
       display:flex; align-items:center; gap:10px;
       flex:0 0 auto;
     }
-
     .pill{
       font-size:12px;
       padding:7px 10px;
@@ -122,18 +109,15 @@
       background: rgba(255,255,255,.04);
       display:flex; gap:8px; align-items:center;
     }
-
     .dot{
       width:8px; height:8px; border-radius:99px;
       background: var(--danger);
       box-shadow: 0 0 0 4px rgba(255,77,109,.12);
     }
-
     .dot.ok{
       background: var(--ok);
       box-shadow: 0 0 0 4px rgba(52,211,153,.14);
     }
-
     button{
       border:1px solid var(--border);
       background: rgba(255,255,255,.04);
@@ -142,15 +126,11 @@
       padding:9px 11px;
       cursor:pointer;
       transition:.15s transform, .15s background;
-      font-weight:600;
+      font-weight:700;
     }
     button:hover{ background: rgba(255,255,255,.06); }
     button:active{ transform: translateY(1px); }
-
-    main{
-      padding:0 16px 10px;
-    }
-
+    main{ padding:0 16px 10px; }
     .chat{
       height: min(68vh, 680px);
       overflow:auto;
@@ -159,14 +139,12 @@
       border:1px solid var(--border);
       border-radius: var(--radius);
     }
-
     .msg{
       display:flex;
       gap:10px;
       margin:10px 0;
       align-items:flex-start;
     }
-
     .avatar{
       width:34px; height:34px;
       border-radius:12px;
@@ -175,12 +153,11 @@
       display:grid; place-items:center;
       flex:0 0 auto;
       color:var(--muted);
-      font-weight:800;
+      font-weight:900;
       user-select:none;
     }
     .avatar.user{ color:#a9f0ff; border-color: rgba(34,211,238,.22); }
     .avatar.bot{ color:#cbbdff; border-color: rgba(124,92,255,.22); }
-
     .bubble{
       max-width: 760px;
       padding:12px 12px;
@@ -193,13 +170,11 @@
     }
     .bubble.user{ background: rgba(34,211,238,.06); border-color: rgba(34,211,238,.18); }
     .bubble.bot{ background: rgba(124,92,255,.06); border-color: rgba(124,92,255,.18); }
-
     .meta{
       margin-top:6px;
       font-size:11px;
       color:var(--muted);
     }
-
     .typing{
       display:inline-flex;
       gap:6px;
@@ -216,19 +191,16 @@
       0%,80%,100%{ transform: translateY(0); opacity:.55 }
       40%{ transform: translateY(-6px); opacity:1 }
     }
-
     footer{
       padding:12px 16px 16px;
       border-top:1px solid var(--border);
       background: linear-gradient(0deg, rgba(15,23,51,.92), rgba(15,23,51,.55));
     }
-
     .composer{
       display:flex;
       gap:10px;
       align-items:flex-end;
     }
-
     textarea{
       width:100%;
       min-height:44px;
@@ -243,7 +215,6 @@
       font-size:14px;
       line-height:1.25;
     }
-
     .hint{
       margin-top:8px;
       font-size:12px;
@@ -253,13 +224,11 @@
       gap:10px;
       flex-wrap:wrap;
     }
-
     .link{
       color:#cbbdff;
       text-decoration:none;
       border-bottom:1px dashed rgba(203,189,255,.5);
     }
-
     .toast{
       position:fixed;
       bottom:16px;
@@ -279,16 +248,21 @@
       z-index:50;
     }
     .toast.show{ display:flex; }
-
-    .small{
+    .small{ font-size:12px; color:var(--muted); }
+    code.inline{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
       font-size:12px;
-      color:var(--muted);
+      padding:2px 6px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background: rgba(255,255,255,.03);
+      color: #dbe4ff;
     }
   </style>
 </head>
 
 <body>
-  <div class="app" role="application">
+  <div class="app">
     <header>
       <div class="brand">
         <div class="logo" id="logoBox" title="FRIJOBOT">
@@ -313,8 +287,8 @@
     <main>
       <div class="chat" id="chat"></div>
       <div class="hint">
-        <div class="small">Tip: escribe y presiona <b>Enter</b> (Shift+Enter para salto de línea).</div>
-        <div class="small">Hecho con ❤️ para FRIJOBOT · <a class="link" href="#" id="privacyLink">Aviso</a></div>
+        <div class="small">Tip: <b>Enter</b> envía · <b>Shift+Enter</b> salto de línea</div>
+        <div class="small">Webhook: <code class="inline">/webhook/chat</code> · <a class="link" href="#" id="privacyLink">Aviso</a></div>
       </div>
     </main>
 
@@ -333,11 +307,13 @@
 
 <script>
   // =========================
-  // CONFIG (lo pegamos después)
+  // CONFIG
   // =========================
-  const WEBHOOK_URL = "PEGAR_AQUI_TU_WEBHOOK_DE_N8N";
+  const WEBHOOK_URL = "https://auto.mindtrax.io/webhook/chat";
 
-  // Logo (opcional): cuando tengas tu logo, súbelo al repo como logo.png y descomenta:
+  // Si quieres poner logo:
+  // 1) Sube un archivo "logo.png" al repo (misma carpeta que index.html)
+  // 2) Descomenta la línea siguiente:
   // setLogo("logo.png");
 
   // =========================
@@ -431,12 +407,6 @@
     img.onload = () => { img.style.display="block"; fallback.style.display="none"; };
   }
 
-  async function ping(){
-    // No hacemos ping real para no depender de CORS.
-    // El estado cambiará a "Conectado" cuando el primer request funcione.
-    setStatus(false, "Sin conectar");
-  }
-
   // =========================
   // Messaging
   // =========================
@@ -451,10 +421,8 @@
     const typingRow = addMessage("bot", "", true);
 
     try{
-      if(WEBHOOK_URL.includes("PEGAR_AQUI")){
-        throw new Error("Falta configurar el WEBHOOK_URL.");
-      }
-
+      // IMPORTANTE: El workflow de n8n debe devolver JSON con { "reply": "..." }
+      // Si tu workflow devuelve otro nombre, abajo hacemos fallback.
       const res = await fetch(WEBHOOK_URL, {
         method:"POST",
         headers: {"Content-Type":"application/json"},
@@ -471,16 +439,16 @@
         data.reply ??
         data.output ??
         data.text ??
+        data.message ??
         JSON.stringify(data);
 
-      // Reemplaza typing por respuesta
       typingRow.querySelector(".bubble").textContent = reply;
 
       setStatus(true, "Conectado");
       saveHistory();
     }catch(err){
       typingRow.querySelector(".bubble").textContent =
-        "⚠️ No pude conectar con el servidor. Revisa el webhook o permisos (CORS).";
+        "⚠️ No pude conectar con el servidor. Casi siempre es CORS en el webhook.";
       typingRow.querySelector(".meta").textContent = nowTime();
       setStatus(false, "Error");
       console.error(err);
@@ -488,7 +456,6 @@
     }
   }
 
-  // Enter para enviar, Shift+Enter para salto de línea
   input.addEventListener("keydown", (e) => {
     if(e.key === "Enter" && !e.shiftKey){
       e.preventDefault();
@@ -505,7 +472,7 @@
   });
 
   loadHistory();
-  ping();
+  setStatus(false, "Sin conectar");
 </script>
 </body>
 </html>
