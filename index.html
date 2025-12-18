@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FRIJOBOT</title>
+  <meta name="description" content="FRIJOBOT — Chat inteligente conectado a tu operación." />
+
+  <style>
+    :root{
+      --bg:#0b1020;
+      --panel:#0f1733;
+      --panel2:#0c1330;
+      --text:#e7ecff;
+      --muted:#9aa7d8;
+      --border:rgba(255,255,255,.10);
+      --shadow: 0 20px 60px rgba(0,0,0,.45);
+      --brand:#7c5cff;
+      --brand2:#22d3ee;
+      --user:#1f2a55;
+      --bot:#101a3f;
+      --danger:#ff4d6d;
+      --ok:#34d399;
+      --radius:18px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(1200px 600px at 10% 10%, rgba(124,92,255,.35), transparent 55%),
+        radial-gradient(900px 500px at 90% 20%, rgba(34,211,238,.22), transparent 60%),
+        radial-gradient(900px 700px at 40% 90%, rgba(52,211,153,.14), transparent 60%),
+        var(--bg);
+      color:var(--text);
+      display:flex;
+      justify-content:center;
+      padding:28px 18px;
+    }
+
+    .app{
+      width:min(980px, 100%);
+      display:grid;
+      grid-template-rows:auto 1fr auto;
+      gap:14px;
+      border:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border-radius: calc(var(--radius) + 6px);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:16px 16px 14px;
+      background: linear-gradient(180deg, rgba(15,23,51,.92), rgba(15,23,51,.55));
+      border-bottom:1px solid var(--border);
+      backdrop-filter: blur(10px);
+    }
+
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      min-width:0;
+    }
+
+    .logo{
+      width:38px; height:38px;
+      border-radius:12px;
+      background: linear-gradient(135deg, var(--brand), var(--brand2));
+      display:grid; place-items:center;
+      font-weight:800;
+      color:#061022;
+      box-shadow: 0 10px 30px rgba(124,92,255,.25);
+      flex:0 0 auto;
+      overflow:hidden;
+    }
+
+    .logo img{
+      width:100%; height:100%; object-fit:cover;
+      display:none; /* se activa cuando pongas tu logo */
+    }
+
+    .titles{
+      display:flex; flex-direction:column;
+      min-width:0;
+    }
+
+    .titles h1{
+      font-size:16px;
+      margin:0;
+      letter-spacing:.6px;
+      text-transform:uppercase;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .titles p{
+      margin:2px 0 0;
+      font-size:12px;
+      color:var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .actions{
+      display:flex; align-items:center; gap:10px;
+      flex:0 0 auto;
+    }
+
+    .pill{
+      font-size:12px;
+      padding:7px 10px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      color:var(--muted);
+      background: rgba(255,255,255,.04);
+      display:flex; gap:8px; align-items:center;
+    }
+
+    .dot{
+      width:8px; height:8px; border-radius:99px;
+      background: var(--danger);
+      box-shadow: 0 0 0 4px rgba(255,77,109,.12);
+    }
+
+    .dot.ok{
+      background: var(--ok);
+      box-shadow: 0 0 0 4px rgba(52,211,153,.14);
+    }
+
+    button{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+      border-radius:12px;
+      padding:9px 11px;
+      cursor:pointer;
+      transition:.15s transform, .15s background;
+      font-weight:600;
+    }
+    button:hover{ background: rgba(255,255,255,.06); }
+    button:active{ transform: translateY(1px); }
+
+    main{
+      padding:0 16px 10px;
+    }
+
+    .chat{
+      height: min(68vh, 680px);
+      overflow:auto;
+      padding:14px;
+      background: rgba(10,16,36,.35);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    .msg{
+      display:flex;
+      gap:10px;
+      margin:10px 0;
+      align-items:flex-start;
+    }
+
+    .avatar{
+      width:34px; height:34px;
+      border-radius:12px;
+      background: rgba(255,255,255,.05);
+      border:1px solid var(--border);
+      display:grid; place-items:center;
+      flex:0 0 auto;
+      color:var(--muted);
+      font-weight:800;
+      user-select:none;
+    }
+    .avatar.user{ color:#a9f0ff; border-color: rgba(34,211,238,.22); }
+    .avatar.bot{ color:#cbbdff; border-color: rgba(124,92,255,.22); }
+
+    .bubble{
+      max-width: 760px;
+      padding:12px 12px;
+      border-radius: 16px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      line-height:1.35;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+    .bubble.user{ background: rgba(34,211,238,.06); border-color: rgba(34,211,238,.18); }
+    .bubble.bot{ background: rgba(124,92,255,.06); border-color: rgba(124,92,255,.18); }
+
+    .meta{
+      margin-top:6px;
+      font-size:11px;
+      color:var(--muted);
+    }
+
+    .typing{
+      display:inline-flex;
+      gap:6px;
+      align-items:center;
+    }
+    .typing span{
+      width:7px; height:7px; border-radius:99px;
+      background: rgba(255,255,255,.38);
+      animation: bounce 1s infinite ease-in-out;
+    }
+    .typing span:nth-child(2){ animation-delay:.12s }
+    .typing span:nth-child(3){ animation-delay:.24s }
+    @keyframes bounce{
+      0%,80%,100%{ transform: translateY(0); opacity:.55 }
+      40%{ transform: translateY(-6px); opacity:1 }
+    }
+
+    footer{
+      padding:12px 16px 16px;
+      border-top:1px solid var(--border);
+      background: linear-gradient(0deg, rgba(15,23,51,.92), rgba(15,23,51,.55));
+    }
+
+    .composer{
+      display:flex;
+      gap:10px;
+      align-items:flex-end;
+    }
+
+    textarea{
+      width:100%;
+      min-height:44px;
+      max-height:140px;
+      resize:none;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      outline:none;
+      background: rgba(255,255,255,.03);
+      color:var(--text);
+      font-size:14px;
+      line-height:1.25;
+    }
+
+    .hint{
+      margin-top:8px;
+      font-size:12px;
+      color:var(--muted);
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .link{
+      color:#cbbdff;
+      text-decoration:none;
+      border-bottom:1px dashed rgba(203,189,255,.5);
+    }
+
+    .toast{
+      position:fixed;
+      bottom:16px;
+      left:50%;
+      transform:translateX(-50%);
+      background: rgba(2,6,23,.88);
+      border:1px solid var(--border);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:999px;
+      box-shadow: var(--shadow);
+      font-size:12px;
+      display:none;
+      gap:8px;
+      align-items:center;
+      backdrop-filter: blur(10px);
+      z-index:50;
+    }
+    .toast.show{ display:flex; }
+
+    .small{
+      font-size:12px;
+      color:var(--muted);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app" role="application">
+    <header>
+      <div class="brand">
+        <div class="logo" id="logoBox" title="FRIJOBOT">
+          <span id="logoFallback">F</span>
+          <img id="logoImg" alt="Logo FRIJOBOT" />
+        </div>
+        <div class="titles">
+          <h1>FRIJOBOT</h1>
+          <p>Asistente inteligente para operación y datos</p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <div class="pill" title="Estado de conexión">
+          <span class="dot" id="statusDot"></span>
+          <span id="statusText">Sin conectar</span>
+        </div>
+        <button id="clearBtn" title="Borrar conversación">Limpiar</button>
+      </div>
+    </header>
+
+    <main>
+      <div class="chat" id="chat"></div>
+      <div class="hint">
+        <div class="small">Tip: escribe y presiona <b>Enter</b> (Shift+Enter para salto de línea).</div>
+        <div class="small">Hecho con ❤️ para FRIJOBOT · <a class="link" href="#" id="privacyLink">Aviso</a></div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="composer">
+        <textarea id="input" placeholder="Escribe tu pregunta…"></textarea>
+        <button id="sendBtn">Enviar</button>
+      </div>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast">
+    <span>✅</span>
+    <span id="toastText">Listo</span>
+  </div>
+
+<script>
+  // =========================
+  // CONFIG (lo pegamos después)
+  // =========================
+  const WEBHOOK_URL = "PEGAR_AQUI_TU_WEBHOOK_DE_N8N";
+
+  // Logo (opcional): cuando tengas tu logo, súbelo al repo como logo.png y descomenta:
+  // setLogo("logo.png");
+
+  // =========================
+  // UI helpers
+  // =========================
+  const chat = document.getElementById("chat");
+  const input = document.getElementById("input");
+  const sendBtn = document.getElementById("sendBtn");
+  const clearBtn = document.getElementById("clearBtn");
+  const statusDot = document.getElementById("statusDot");
+  const statusText = document.getElementById("statusText");
+  const toast = document.getElementById("toast");
+  const toastText = document.getElementById("toastText");
+
+  function showToast(text){
+    toastText.textContent = text;
+    toast.classList.add("show");
+    setTimeout(()=>toast.classList.remove("show"), 1600);
+  }
+
+  function setStatus(ok, text){
+    statusDot.classList.toggle("ok", !!ok);
+    statusText.textContent = text;
+  }
+
+  function nowTime(){
+    const d = new Date();
+    return d.toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
+  }
+
+  function addMessage(role, content, isTyping=false){
+    const row = document.createElement("div");
+    row.className = "msg";
+
+    const avatar = document.createElement("div");
+    avatar.className = "avatar " + (role === "user" ? "user" : "bot");
+    avatar.textContent = role === "user" ? "Tú" : "F";
+
+    const bubble = document.createElement("div");
+    bubble.className = "bubble " + (role === "user" ? "user" : "bot");
+
+    if(isTyping){
+      bubble.innerHTML = `<span class="typing"><span></span><span></span><span></span></span>`;
+    } else {
+      bubble.textContent = content;
+    }
+
+    const meta = document.createElement("div");
+    meta.className = "meta";
+    meta.textContent = nowTime();
+
+    const col = document.createElement("div");
+    col.appendChild(bubble);
+    col.appendChild(meta);
+
+    row.appendChild(avatar);
+    row.appendChild(col);
+
+    chat.appendChild(row);
+    chat.scrollTop = chat.scrollHeight;
+    return row;
+  }
+
+  function saveHistory(){
+    localStorage.setItem("frijobot_history", chat.innerHTML);
+  }
+
+  function loadHistory(){
+    const html = localStorage.getItem("frijobot_history");
+    if(html){
+      chat.innerHTML = html;
+      chat.scrollTop = chat.scrollHeight;
+    } else {
+      addMessage("bot", "Hola 👋 Soy FRIJOBOT. ¿Qué quieres analizar hoy?");
+      saveHistory();
+    }
+  }
+
+  function clearHistory(){
+    localStorage.removeItem("frijobot_history");
+    chat.innerHTML = "";
+    addMessage("bot", "Listo. Empecemos de nuevo. ¿Qué quieres analizar?");
+    saveHistory();
+    showToast("Conversación limpiada");
+  }
+
+  function setLogo(path){
+    const img = document.getElementById("logoImg");
+    const fallback = document.getElementById("logoFallback");
+    img.src = path;
+    img.onload = () => { img.style.display="block"; fallback.style.display="none"; };
+  }
+
+  async function ping(){
+    // No hacemos ping real para no depender de CORS.
+    // El estado cambiará a "Conectado" cuando el primer request funcione.
+    setStatus(false, "Sin conectar");
+  }
+
+  // =========================
+  // Messaging
+  // =========================
+  async function send(){
+    const text = input.value.trim();
+    if(!text) return;
+
+    input.value = "";
+    addMessage("user", text);
+    saveHistory();
+
+    const typingRow = addMessage("bot", "", true);
+
+    try{
+      if(WEBHOOK_URL.includes("PEGAR_AQUI")){
+        throw new Error("Falta configurar el WEBHOOK_URL.");
+      }
+
+      const res = await fetch(WEBHOOK_URL, {
+        method:"POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ message: text })
+      });
+
+      if(!res.ok){
+        const t = await res.text();
+        throw new Error(`HTTP ${res.status}: ${t}`);
+      }
+
+      const data = await res.json();
+      const reply =
+        data.reply ??
+        data.output ??
+        data.text ??
+        JSON.stringify(data);
+
+      // Reemplaza typing por respuesta
+      typingRow.querySelector(".bubble").textContent = reply;
+
+      setStatus(true, "Conectado");
+      saveHistory();
+    }catch(err){
+      typingRow.querySelector(".bubble").textContent =
+        "⚠️ No pude conectar con el servidor. Revisa el webhook o permisos (CORS).";
+      typingRow.querySelector(".meta").textContent = nowTime();
+      setStatus(false, "Error");
+      console.error(err);
+      saveHistory();
+    }
+  }
+
+  // Enter para enviar, Shift+Enter para salto de línea
+  input.addEventListener("keydown", (e) => {
+    if(e.key === "Enter" && !e.shiftKey){
+      e.preventDefault();
+      send();
+    }
+  });
+
+  sendBtn.addEventListener("click", send);
+  clearBtn.addEventListener("click", clearHistory);
+
+  document.getElementById("privacyLink").addEventListener("click", (e)=>{
+    e.preventDefault();
+    alert("FRIJOBOT procesa tus mensajes para responder con datos. Evita compartir información sensible si no es necesario.");
+  });
+
+  loadHistory();
+  ping();
+</script>
+</body>
+</html>
