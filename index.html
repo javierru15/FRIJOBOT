@@ -5,231 +5,319 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>FRIJOBOT</title>
   <meta name="description" content="FRIJOBOT — Asistente inteligente conectado a tu operación." />
+  <meta name="theme-color" content="#0B0F14" />
 
   <style>
     :root{
-      --bg:#07120d;
-      --bg2:#050f0b;
-      --panel:rgba(255,255,255,.04);
-      --panel2:rgba(255,255,255,.06);
-      --text:#eafff6;
-      --muted:#a6c6b7;
-      --border:rgba(255,255,255,.10);
-      --shadow: 0 20px 70px rgba(0,0,0,.55);
+      /* Traxión-ish palette (dark + green accent) */
+      --bg0:#070A0D;
+      --bg1:#0B0F14;
+      --panel:#0E141B;
+      --panel2:#0C1117;
+      --card: rgba(255,255,255,.04);
+      --card2: rgba(255,255,255,.06);
+      --border: rgba(255,255,255,.10);
+      --border2: rgba(255,255,255,.16);
+      --text:#EAF1FF;
+      --muted:#9AA7B8;
 
-      --g1:#22c55e; /* green */
-      --g2:#10b981; /* emerald */
-      --g3:#14b8a6; /* teal */
+      --brand:#22C55E;     /* green */
+      --brand2:#16A34A;    /* deeper green */
+      --warn:#F59E0B;
+      --danger:#EF4444;
 
-      --danger:#ff4d6d;
-      --ok:#34d399;
-
-      --radius:18px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      --shadow: 0 22px 70px rgba(0,0,0,.50);
+      --shadow2: 0 14px 40px rgba(0,0,0,.45);
+      --radius: 18px;
+      --radius2: 22px;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
     body{
       margin:0;
-      font-family: var(--sans);
-      color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color: var(--text);
       background:
-        radial-gradient(1200px 600px at 15% 10%, rgba(34,197,94,.22), transparent 55%),
-        radial-gradient(900px 500px at 85% 20%, rgba(16,185,129,.18), transparent 60%),
-        radial-gradient(900px 700px at 45% 90%, rgba(20,184,166,.12), transparent 60%),
-        linear-gradient(180deg, var(--bg), var(--bg2));
-      display:flex;
-      justify-content:center;
-      padding:20px;
+        radial-gradient(900px 520px at 15% 15%, rgba(34,197,94,.14), transparent 60%),
+        radial-gradient(900px 520px at 85% 10%, rgba(34,197,94,.08), transparent 55%),
+        radial-gradient(1000px 700px at 50% 95%, rgba(255,255,255,.06), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      overflow-x:hidden;
     }
 
+    /* Layout */
     .shell{
       width:min(1200px, 100%);
-      height:min(86vh, 820px);
+      margin:0 auto;
+      padding: 22px 16px 26px;
       display:grid;
-      grid-template-columns: 320px 1fr;
+      grid-template-columns: 340px 1fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    @media (max-width: 980px){
+      .shell{ grid-template-columns: 1fr; }
+      .sidebar{ order: 2; }
+      .main{ order: 1; }
+    }
+
+    /* Top banner */
+    .topbar{
+      width:min(1200px, 100%);
+      margin: 0 auto;
+      padding: 18px 16px 0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
       gap:14px;
     }
 
-    /* Sidebar */
-    .side{
-      border:1px solid var(--border);
-      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-      border-radius: calc(var(--radius) + 6px);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-      min-height:0;
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      min-width:0;
     }
-    .sideHeader{
-      padding:14px 14px 12px;
-      border-bottom:1px solid var(--border);
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-      backdrop-filter: blur(10px);
-    }
-    .brandRow{
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
-    .logo{
+    .logoWrap{
       width:44px; height:44px;
-      border-radius:14px;
-      border:1px solid rgba(34,197,94,.35);
-      background: linear-gradient(135deg, rgba(34,197,94,.25), rgba(20,184,166,.18));
+      border-radius: 14px;
       overflow:hidden;
+      background: linear-gradient(135deg, rgba(34,197,94,.25), rgba(255,255,255,.06));
+      border: 1px solid rgba(34,197,94,.25);
+      box-shadow: 0 14px 40px rgba(34,197,94,.12);
+      flex:0 0 auto;
       display:grid;
       place-items:center;
-      flex:0 0 auto;
-      box-shadow: 0 12px 30px rgba(34,197,94,.12);
     }
-    .logo img{width:100%;height:100%;object-fit:cover;display:block}
-    .titles{min-width:0}
-    .titles h1{
-      margin:0;
-      font-size:14px;
-      letter-spacing:.7px;
-      text-transform:uppercase;
+    .logoWrap img{
+      width:100%; height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .brandText{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .brandText .title{
+      font-weight:900;
+      letter-spacing:.5px;
+      text-transform: uppercase;
+      font-size: 14px;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
     }
-    .titles p{
-      margin:2px 0 0;
-      font-size:12px;
-      color:var(--muted);
+    .brandText .subtitle{
+      font-size: 12px;
+      color: var(--muted);
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
     }
 
-    .sideActions{
-      margin-top:10px;
+    .rightTop{
       display:flex;
-      gap:8px;
+      align-items:center;
+      gap:10px;
+      flex: 0 0 auto;
+    }
+    .pill{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow2);
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .dot{
+      width:10px; height:10px; border-radius:999px;
+      background: var(--danger);
+      box-shadow: 0 0 0 4px rgba(239,68,68,.14);
+    }
+    .dot.ok{
+      background: var(--brand);
+      box-shadow: 0 0 0 4px rgba(34,197,94,.16);
     }
 
     .btn{
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.04);
-      color:var(--text);
-      border-radius:12px;
-      padding:10px 10px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-weight: 800;
       cursor:pointer;
-      transition:.15s transform, .15s background, .15s border-color;
-      font-weight:800;
-      font-size:13px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      width:100%;
+      transition: .15s transform, .15s background, .15s border;
     }
-    .btn:hover{ background: rgba(255,255,255,.06); border-color: rgba(34,197,94,.28); }
+    .btn:hover{
+      background: rgba(255,255,255,.07);
+      border-color: rgba(255,255,255,.16);
+    }
     .btn:active{ transform: translateY(1px); }
     .btn.primary{
-      background: linear-gradient(135deg, rgba(34,197,94,.22), rgba(20,184,166,.18));
-      border-color: rgba(34,197,94,.30);
+      border-color: rgba(34,197,94,.32);
+      background: linear-gradient(135deg, rgba(34,197,94,.18), rgba(255,255,255,.05));
+    }
+
+    /* Sidebar */
+    .sidebar{
+      border-radius: var(--radius2);
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      min-height: 560px;
+    }
+
+    .sideHeader{
+      padding: 14px 14px 12px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(12,17,23,.92), rgba(12,17,23,.60));
+      backdrop-filter: blur(10px);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .sideHeader .h{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      min-width:0;
+    }
+    .sideHeader .h .t{
+      font-weight:900;
+      letter-spacing:.3px;
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+    .sideHeader .h .s{
+      font-size: 12px;
+      color: var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .sideBody{
+      padding: 10px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
     }
 
     .search{
-      margin-top:10px;
-      display:flex;
-      gap:8px;
-    }
-    .search input{
       width:100%;
-      padding:10px 10px;
-      border-radius:12px;
       border:1px solid var(--border);
-      outline:none;
       background: rgba(255,255,255,.03);
+      border-radius: 14px;
+      padding: 10px 12px;
       color: var(--text);
-      font-size:13px;
+      outline:none;
+      font-size: 13px;
     }
 
     .chatList{
-      padding:10px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      max-height: 520px;
       overflow:auto;
-      min-height:0;
-    }
-    .chatItem{
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
-      border-radius:14px;
-      padding:10px 10px;
-      cursor:pointer;
-      transition:.15s background, .15s border-color;
-      margin-bottom:8px;
-    }
-    .chatItem:hover{ background: rgba(255,255,255,.05); border-color: rgba(34,197,94,.20); }
-    .chatItem.active{
-      border-color: rgba(34,197,94,.45);
-      background: rgba(34,197,94,.08);
-    }
-    .chatItem .t{
-      font-weight:900;
-      font-size:13px;
-      margin-bottom:4px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .chatItem .s{
-      color:var(--muted);
-      font-size:12px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      padding-right: 4px;
     }
 
-    .sideFooter{
-      padding:10px 12px;
-      border-top:1px solid var(--border);
-      color:var(--muted);
-      font-size:12px;
+    .chatItem{
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      border-radius: 16px;
+      padding: 10px 10px;
+      cursor:pointer;
+      transition: .15s background, .15s border, .15s transform;
       display:flex;
+      align-items:flex-start;
       justify-content:space-between;
       gap:10px;
-      flex-wrap:wrap;
     }
-    .pill{
+    .chatItem:hover{
+      background: rgba(255,255,255,.05);
+      border-color: rgba(255,255,255,.16);
+    }
+    .chatItem.active{
+      border-color: rgba(34,197,94,.32);
+      background: linear-gradient(135deg, rgba(34,197,94,.12), rgba(255,255,255,.03));
+    }
+    .chatItem .meta{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+    .chatItem .name{
+      font-weight:900;
+      font-size: 13px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .chatItem .snippet{
       font-size:12px;
-      padding:7px 10px;
-      border:1px solid var(--border);
-      border-radius:999px;
-      color:var(--muted);
+      color: var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width: 240px;
+    }
+    .chatItem .when{
+      font-size:11px;
+      color: rgba(154,167,184,.85);
+    }
+    .miniBtns{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      flex:0 0 auto;
+    }
+    .iconBtn{
+      width:34px;
+      height:34px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
       background: rgba(255,255,255,.04);
-      display:flex; gap:8px; align-items:center;
+      color: var(--text);
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      font-weight:900;
+      transition:.15s background,.15s border;
     }
-    .dot{
-      width:8px; height:8px; border-radius:99px;
-      background: var(--danger);
-      box-shadow: 0 0 0 4px rgba(255,77,109,.12);
-    }
-    .dot.ok{
-      background: var(--ok);
-      box-shadow: 0 0 0 4px rgba(52,211,153,.14);
+    .iconBtn:hover{
+      background: rgba(255,255,255,.06);
+      border-color: rgba(255,255,255,.16);
     }
 
     /* Main */
     .main{
-      border:1px solid var(--border);
+      border-radius: var(--radius2);
+      border: 1px solid var(--border);
       background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-      border-radius: calc(var(--radius) + 6px);
       box-shadow: var(--shadow);
       overflow:hidden;
+      min-height: 560px;
       display:grid;
-      grid-template-rows:auto 1fr auto;
-      min-height:0;
+      grid-template-rows: auto 1fr auto;
     }
+
     .mainHeader{
-      padding:14px 14px 12px;
-      /* header más premium */
-      background: linear-gradient(180deg, rgba(34,197,94,.10), rgba(255,255,255,.02));
-      border-bottom:1px solid var(--border);
+      padding: 14px 14px 12px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(12,17,23,.92), rgba(12,17,23,.60));
       backdrop-filter: blur(10px);
       display:flex;
       align-items:center;
@@ -237,90 +325,86 @@
       gap:10px;
     }
     .mainHeader .left{
+      min-width:0;
       display:flex;
       flex-direction:column;
-      min-width:0;
+      gap:2px;
     }
-    .mainHeader .left .h{
-      font-weight:1000;
-      letter-spacing:.4px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .mainHeader .left .p{
-      color:var(--muted);
-      font-size:12px;
-      margin-top:2px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .mainHeader .right{
-      display:flex;
-      gap:8px;
-      flex:0 0 auto;
-    }
-    .btnSmall{
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.04);
-      color:var(--text);
-      border-radius:12px;
-      padding:9px 10px;
-      cursor:pointer;
+    .mainHeader .left .t{
       font-weight:900;
+      text-transform: uppercase;
+      letter-spacing:.35px;
+      font-size: 13px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .mainHeader .left .s{
       font-size:12px;
+      color: var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
-    .btnSmall:hover{ background: rgba(255,255,255,.06); border-color: rgba(34,197,94,.28); }
 
-    .chat{
+    .chatBox{
+      padding: 14px;
       overflow:auto;
-      padding:14px;
-      background: rgba(0,0,0,.18);
-      min-height:0;
+      background:
+        radial-gradient(1200px 700px at 50% 0%, rgba(34,197,94,.06), transparent 55%),
+        rgba(10,15,20,.30);
     }
-    .msg{
+
+    .msgRow{
       display:flex;
       gap:10px;
-      margin:10px 0;
+      margin: 10px 0;
       align-items:flex-start;
     }
     .avatar{
-      width:34px; height:34px;
-      border-radius:12px;
-      background: rgba(255,255,255,.05);
-      border:1px solid var(--border);
-      display:grid; place-items:center;
-      flex:0 0 auto;
-      color:var(--muted);
-      font-weight:1000;
+      width: 36px; height: 36px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      display:grid;
+      place-items:center;
+      font-weight: 900;
+      color: var(--muted);
+      flex: 0 0 auto;
       user-select:none;
     }
-    .avatar.user{ color:#b9ffe0; border-color: rgba(34,197,94,.22); }
-    .avatar.bot{ color:#b7fff3; border-color: rgba(20,184,166,.22); }
+    .avatar.user{
+      border-color: rgba(34,197,94,.22);
+      color: #B9F6C9;
+      background: rgba(34,197,94,.06);
+    }
+    .avatar.bot{
+      border-color: rgba(255,255,255,.12);
+      color: #EAF1FF;
+    }
     .bubble{
       max-width: 820px;
-      padding:12px 12px;
-      border-radius: 16px;
-      border:1px solid var(--border);
+      padding: 12px 12px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
       background: rgba(255,255,255,.03);
-      line-height:1.35;
       white-space:pre-wrap;
       word-break:break-word;
+      line-height:1.35;
     }
     .bubble.user{
-      background: rgba(34,197,94,.07);
-      border-color: rgba(34,197,94,.18);
+      border-color: rgba(34,197,94,.20);
+      background: rgba(34,197,94,.08);
     }
     .bubble.bot{
-      background: rgba(20,184,166,.07);
-      border-color: rgba(20,184,166,.18);
+      border-color: rgba(255,255,255,.10);
     }
-    .meta{
-      margin-top:6px;
-      font-size:11px;
-      color:var(--muted);
+    .time{
+      margin-top: 6px;
+      font-size: 11px;
+      color: rgba(154,167,184,.85);
     }
+
     .typing{
       display:inline-flex;
       gap:6px;
@@ -328,7 +412,7 @@
     }
     .typing span{
       width:7px; height:7px; border-radius:99px;
-      background: rgba(234,255,246,.55);
+      background: rgba(255,255,255,.42);
       animation: bounce 1s infinite ease-in-out;
     }
     .typing span:nth-child(2){ animation-delay:.12s }
@@ -339,108 +423,92 @@
     }
 
     .composer{
-      border-top:1px solid var(--border);
-      background: linear-gradient(0deg, rgba(34,197,94,.08), rgba(255,255,255,.02));
-      padding:12px 14px 14px;
-    }
-    .row{
+      padding: 12px 14px 14px;
+      border-top: 1px solid var(--border);
+      background: linear-gradient(0deg, rgba(12,17,23,.92), rgba(12,17,23,.60));
       display:flex;
-      gap:10px;
+      gap: 10px;
       align-items:flex-end;
     }
     textarea{
       width:100%;
-      min-height:46px;
-      max-height:160px;
+      min-height: 46px;
+      max-height: 150px;
       resize:none;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      outline:none;
+      border-radius: 16px;
+      border: 1px solid var(--border);
       background: rgba(255,255,255,.03);
-      color:var(--text);
-      font-size:14px;
-      line-height:1.25;
+      color: var(--text);
+      padding: 12px 12px;
+      outline:none;
+      font-size: 14px;
+      line-height: 1.25;
     }
-    .hint{
-      margin-top:8px;
-      font-size:12px;
-      color:var(--muted);
+
+    .footNote{
+      padding: 10px 14px 12px;
+      font-size: 12px;
+      color: var(--muted);
       display:flex;
       justify-content:space-between;
       gap:10px;
       flex-wrap:wrap;
     }
-    .kbd{
-      font-family: var(--mono);
-      font-size:12px;
-      padding:2px 6px;
-      border:1px solid var(--border);
-      border-radius:10px;
+    .codePill{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
       background: rgba(255,255,255,.03);
-      color:#dfffea;
+      color: #DDE7FF;
     }
-    .toast{
-      position:fixed;
-      bottom:16px;
-      left:50%;
-      transform:translateX(-50%);
-      background: rgba(2,6,23,.88);
-      border:1px solid var(--border);
-      color:var(--text);
-      padding:10px 12px;
-      border-radius:999px;
-      box-shadow: var(--shadow);
-      font-size:12px;
-      display:none;
-      gap:8px;
-      align-items:center;
-      backdrop-filter: blur(10px);
-      z-index:50;
-    }
-    .toast.show{ display:flex; }
-
-    @media (max-width: 980px){
-      .shell{ grid-template-columns: 1fr; height:auto; }
-      .side{ height:420px; }
-      .main{ height:min(86vh, 820px); }
+    a.link{
+      color: #B9F6C9;
+      text-decoration:none;
+      border-bottom: 1px dashed rgba(185,246,201,.55);
     }
   </style>
 </head>
 
 <body>
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="logoWrap" title="FRIJOBOT">
+        <img src="logo.png" alt="Logo FRIJOBOT" onerror="this.style.display='none';"/>
+      </div>
+      <div class="brandText">
+        <div class="title">FRIJOBOT</div>
+        <div class="subtitle">Vida en movimiento · Asistente para operación y datos</div>
+      </div>
+    </div>
+
+    <div class="rightTop">
+      <div class="pill" title="Estado de conexión">
+        <span class="dot" id="statusDot"></span>
+        <span id="statusText">Sin conectar</span>
+      </div>
+      <button class="btn" id="newChatBtn">Nuevo chat</button>
+      <button class="btn primary" id="clearAllBtn">Limpiar todo</button>
+    </div>
+  </div>
+
+  <!-- App -->
   <div class="shell">
     <!-- Sidebar -->
-    <aside class="side">
+    <aside class="sidebar">
       <div class="sideHeader">
-        <div class="brandRow">
-          <div class="logo" title="Logo">
-            <img src="logo.png" alt="Traxión logo" />
-          </div>
-          <div class="titles">
-            <h1>FRIJOBOT</h1>
-            <p>Traxión • Vida en movimiento</p>
-          </div>
+        <div class="h">
+          <div class="t">Conversaciones</div>
+          <div class="s" id="sideSub">Tu historial guardado en este navegador</div>
         </div>
-
-        <div class="sideActions">
-          <button class="btn primary" id="newChatBtn">＋ Nuevo chat</button>
-          <button class="btn" id="deleteChatBtn">🗑️ Borrar</button>
-        </div>
-
-        <div class="search">
-          <input id="searchBox" placeholder="Buscar conversación…" />
-        </div>
+        <button class="iconBtn" id="exportBtn" title="Exportar historial">⤓</button>
       </div>
 
-      <div class="chatList" id="chatList"></div>
-
-      <div class="sideFooter">
-        <div class="pill" title="Estado de conexión">
-          <span class="dot" id="statusDot"></span>
-          <span id="statusText">Sin conectar</span>
-        </div>
-        <div>Enter envía · Shift+Enter salto</div>
+      <div class="sideBody">
+        <input class="search" id="search" placeholder="Buscar conversación..." />
+        <div class="chatList" id="chatList"></div>
       </div>
     </aside>
 
@@ -448,32 +516,24 @@
     <main class="main">
       <div class="mainHeader">
         <div class="left">
-          <div class="h" id="chatTitle">Chat</div>
-          <div class="p" id="chatSubtitle">Pregúntame sobre operación, siniestros, flota, NPS, MTTO, etc.</div>
+          <div class="t" id="chatTitle">Chat</div>
+          <div class="s">Tip: Enter envía · Shift+Enter salto de línea · Webhook <span class="codePill">/webhook/chat</span></div>
         </div>
-        <div class="right">
-          <button class="btnSmall" id="clearBtn">Limpiar chat</button>
-        </div>
+        <button class="btn" id="clearChatBtn">Limpiar chat</button>
       </div>
 
-      <div class="chat" id="chat"></div>
+      <div class="chatBox" id="chatBox"></div>
+
+      <div class="footNote">
+        <div>Evita compartir información sensible innecesaria.</div>
+        <div><a href="#" class="link" id="privacy">Aviso</a></div>
+      </div>
 
       <div class="composer">
-        <div class="row">
-          <textarea id="input" placeholder="Escribe tu pregunta…"></textarea>
-          <button class="btn primary" style="width:160px" id="sendBtn">Enviar</button>
-        </div>
-        <div class="hint">
-          <div>Tip: <span class="kbd">Enter</span> envía · <span class="kbd">Shift+Enter</span> salto de línea</div>
-          <div>Endpoint: <span class="kbd">/webhook/chat</span></div>
-        </div>
+        <textarea id="input" placeholder="Escribe tu pregunta…"></textarea>
+        <button class="btn primary" id="sendBtn">Enviar</button>
       </div>
     </main>
-  </div>
-
-  <div class="toast" id="toast">
-    <span>✅</span>
-    <span id="toastText">Listo</span>
   </div>
 
 <script>
@@ -483,221 +543,281 @@
   const WEBHOOK_URL = "https://auto.mindtrax.io/webhook/chat";
 
   // =========================
-  // SESSION (por navegador)
+  // Storage model (multi-chat)
   // =========================
-  const SESSION_ID = (() => {
-    const key = "frijobot_session_id";
-    let id = localStorage.getItem(key);
-    if (!id) {
-      id = (crypto?.randomUUID?.() || ("sid_" + Math.random().toString(16).slice(2) + Date.now()));
-      localStorage.setItem(key, id);
-    }
-    return id;
-  })();
+  const STORE_KEY = "frijobot_store_v1";
 
-  // =========================
-  // STORAGE: chats tipo ChatGPT
-  // =========================
-  const STORE_KEY = "frijobot_chats_v1";
+  function uid(){
+    return Math.random().toString(16).slice(2) + Date.now().toString(16);
+  }
+
+  function nowStr(){
+    const d = new Date();
+    return d.toLocaleString([], { day:"2-digit", month:"short", hour:"2-digit", minute:"2-digit" });
+  }
+
   function loadStore(){
     try{
-      return JSON.parse(localStorage.getItem(STORE_KEY) || "null") || { activeId:null, chats:{} };
-    }catch{ return { activeId:null, chats:{} }; }
-  }
-  function saveStore(s){ localStorage.setItem(STORE_KEY, JSON.stringify(s)); }
-
-  function newChat(title="Nuevo chat"){
-    const s = loadStore();
-    const id = "c_" + (crypto?.randomUUID?.() || (Date.now()+"_"+Math.random().toString(16).slice(2)));
-    s.chats[id] = { id, title, updatedAt: Date.now(), messages: [] };
-    s.activeId = id;
-    saveStore(s);
-    return id;
-  }
-
-  function getActiveChat(){
-    const s = loadStore();
-    if (!s.activeId || !s.chats[s.activeId]) {
-      const id = newChat("Chat");
-      return loadStore().chats[id];
+      return JSON.parse(localStorage.getItem(STORE_KEY)) || { activeId: null, chats: [] };
+    }catch{
+      return { activeId: null, chats: [] };
     }
-    return s.chats[s.activeId];
   }
 
-  function setActive(id){
-    const s = loadStore();
-    if (s.chats[id]) { s.activeId = id; saveStore(s); }
+  function saveStore(store){
+    localStorage.setItem(STORE_KEY, JSON.stringify(store));
   }
 
-  function deleteActive(){
-    const s = loadStore();
-    const id = s.activeId;
-    if (id && s.chats[id]) delete s.chats[id];
-    const keys = Object.keys(s.chats);
-    s.activeId = keys[0] || null;
-    if (!s.activeId) newChat("Chat");
-    saveStore(s);
+  function createChat(name="Nueva conversación"){
+    return {
+      id: uid(),
+      name,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      messages: [
+        { role: "bot", text: "Hola 👋 Soy FRIJOBOT. ¿Qué quieres analizar hoy?", ts: Date.now() }
+      ]
+    };
   }
 
   // =========================
-  // UI
+  // DOM
   // =========================
-  const chatEl = document.getElementById("chat");
-  const input = document.getElementById("input");
-  const sendBtn = document.getElementById("sendBtn");
-  const clearBtn = document.getElementById("clearBtn");
-  const newChatBtn = document.getElementById("newChatBtn");
-  const deleteChatBtn = document.getElementById("deleteChatBtn");
-  const chatListEl = document.getElementById("chatList");
-  const searchBox = document.getElementById("searchBox");
-  const chatTitle = document.getElementById("chatTitle");
-  const chatSubtitle = document.getElementById("chatSubtitle");
-  const statusDot = document.getElementById("statusDot");
-  const statusText = document.getElementById("statusText");
-  const toast = document.getElementById("toast");
-  const toastText = document.getElementById("toastText");
+  const chatList = document.getElementById("chatList");
+  const chatBox  = document.getElementById("chatBox");
+  const input    = document.getElementById("input");
+  const sendBtn  = document.getElementById("sendBtn");
+  const clearChatBtn = document.getElementById("clearChatBtn");
+  const clearAllBtn  = document.getElementById("clearAllBtn");
+  const newChatBtn   = document.getElementById("newChatBtn");
+  const exportBtn    = document.getElementById("exportBtn");
+  const search       = document.getElementById("search");
+  const chatTitle    = document.getElementById("chatTitle");
+  const statusDot    = document.getElementById("statusDot");
+  const statusText   = document.getElementById("statusText");
 
-  function showToast(text){
-    toastText.textContent = text;
-    toast.classList.add("show");
-    setTimeout(()=>toast.classList.remove("show"), 1400);
-  }
   function setStatus(ok, text){
     statusDot.classList.toggle("ok", !!ok);
     statusText.textContent = text;
   }
-  function nowTime(){
-    const d = new Date();
-    return d.toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
-  }
 
-  function renderMessages(){
-    const c = getActiveChat();
-    chatTitle.textContent = c.title || "Chat";
-    chatEl.innerHTML = "";
-    for (const m of c.messages){
-      addMessage(m.role, m.content, m.time, false);
-    }
-    chatEl.scrollTop = chatEl.scrollHeight;
-  }
+  function escapeText(t){ return (t ?? "").toString(); }
 
-  function addMessage(role, content, timeStr=null, isTyping=false){
+  function renderMessage(msg){
     const row = document.createElement("div");
-    row.className = "msg";
+    row.className = "msgRow";
 
     const avatar = document.createElement("div");
-    avatar.className = "avatar " + (role === "user" ? "user" : "bot");
-    avatar.textContent = role === "user" ? "Tú" : "F";
+    avatar.className = "avatar " + (msg.role === "user" ? "user" : "bot");
+    avatar.textContent = msg.role === "user" ? "Tú" : "F";
 
     const bubble = document.createElement("div");
-    bubble.className = "bubble " + (role === "user" ? "user" : "bot");
-    bubble.innerHTML = isTyping
-      ? `<span class="typing"><span></span><span></span><span></span></span>`
-      : "";
+    bubble.className = "bubble " + (msg.role === "user" ? "user" : "bot");
+    bubble.textContent = escapeText(msg.text);
 
-    if(!isTyping) bubble.textContent = content;
-
-    const meta = document.createElement("div");
-    meta.className = "meta";
-    meta.textContent = timeStr || nowTime();
+    const time = document.createElement("div");
+    time.className = "time";
+    time.textContent = new Date(msg.ts).toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
 
     const col = document.createElement("div");
     col.appendChild(bubble);
-    col.appendChild(meta);
+    col.appendChild(time);
 
     row.appendChild(avatar);
     row.appendChild(col);
-
-    chatEl.appendChild(row);
-    chatEl.scrollTop = chatEl.scrollHeight;
     return row;
   }
 
-  function renderChatList(){
-    const s = loadStore();
-    const q = (searchBox.value || "").toLowerCase().trim();
-    const chats = Object.values(s.chats)
-      .sort((a,b)=> (b.updatedAt||0) - (a.updatedAt||0))
-      .filter(c => !q || (c.title||"").toLowerCase().includes(q) || (c.messages?.[0]?.content||"").toLowerCase().includes(q));
+  function renderTyping(){
+    const row = document.createElement("div");
+    row.className = "msgRow";
 
-    chatListEl.innerHTML = "";
-    for (const c of chats){
+    const avatar = document.createElement("div");
+    avatar.className = "avatar bot";
+    avatar.textContent = "F";
+
+    const bubble = document.createElement("div");
+    bubble.className = "bubble bot";
+    bubble.innerHTML = `<span class="typing"><span></span><span></span><span></span></span>`;
+
+    const time = document.createElement("div");
+    time.className = "time";
+    time.textContent = new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
+
+    const col = document.createElement("div");
+    col.appendChild(bubble);
+    col.appendChild(time);
+
+    row.appendChild(avatar);
+    row.appendChild(col);
+    return row;
+  }
+
+  function getActiveChat(store){
+    return store.chats.find(c => c.id === store.activeId) || null;
+  }
+
+  function snippetFromChat(chat){
+    const last = chat.messages[chat.messages.length - 1];
+    const t = last?.text || "";
+    return t.length > 60 ? t.slice(0,60) + "…" : t;
+  }
+
+  function renderSidebar(store){
+    const q = (search.value || "").trim().toLowerCase();
+    chatList.innerHTML = "";
+
+    const chats = [...store.chats].sort((a,b) => b.updatedAt - a.updatedAt)
+      .filter(c => !q || c.name.toLowerCase().includes(q) || snippetFromChat(c).toLowerCase().includes(q));
+
+    chats.forEach(chat => {
       const item = document.createElement("div");
-      item.className = "chatItem" + (c.id === s.activeId ? " active" : "");
-      item.innerHTML = `
-        <div class="t">${escapeHtml(c.title || "Chat")}</div>
-        <div class="s">${escapeHtml((c.messages?.slice(-1)[0]?.content || "Sin mensajes").slice(0,80))}</div>
-      `;
-      item.addEventListener("click", ()=>{
-        setActive(c.id);
-        renderChatList();
-        renderMessages();
-      });
-      chatListEl.appendChild(item);
-    }
+      item.className = "chatItem " + (chat.id === store.activeId ? "active" : "");
+
+      const meta = document.createElement("div");
+      meta.className = "meta";
+      const name = document.createElement("div");
+      name.className = "name";
+      name.textContent = chat.name;
+
+      const snip = document.createElement("div");
+      snip.className = "snippet";
+      snip.textContent = snippetFromChat(chat);
+
+      const when = document.createElement("div");
+      when.className = "when";
+      when.textContent = new Date(chat.updatedAt).toLocaleString([], { day:"2-digit", month:"short", hour:"2-digit", minute:"2-digit" });
+
+      meta.appendChild(name);
+      meta.appendChild(snip);
+      meta.appendChild(when);
+
+      const mini = document.createElement("div");
+      mini.className = "miniBtns";
+
+      const renameBtn = document.createElement("button");
+      renameBtn.className = "iconBtn";
+      renameBtn.title = "Renombrar";
+      renameBtn.textContent = "✎";
+      renameBtn.onclick = (e)=>{
+        e.stopPropagation();
+        const n = prompt("Nombre de la conversación:", chat.name);
+        if(n && n.trim()){
+          chat.name = n.trim();
+          chat.updatedAt = Date.now();
+          saveStore(store);
+          renderAll(store);
+        }
+      };
+
+      const delBtn = document.createElement("button");
+      delBtn.className = "iconBtn";
+      delBtn.title = "Eliminar";
+      delBtn.textContent = "🗑";
+      delBtn.onclick = (e)=>{
+        e.stopPropagation();
+        if(!confirm("¿Eliminar esta conversación?")) return;
+        store.chats = store.chats.filter(c => c.id !== chat.id);
+        if(store.activeId === chat.id){
+          store.activeId = store.chats[0]?.id || null;
+        }
+        if(!store.activeId && store.chats.length === 0){
+          const c = createChat("Chat");
+          store.chats.push(c);
+          store.activeId = c.id;
+        }
+        saveStore(store);
+        renderAll(store);
+      };
+
+      mini.appendChild(renameBtn);
+      mini.appendChild(delBtn);
+
+      item.appendChild(meta);
+      item.appendChild(mini);
+
+      item.onclick = ()=>{
+        store.activeId = chat.id;
+        saveStore(store);
+        renderAll(store);
+      };
+
+      chatList.appendChild(item);
+    });
   }
 
-  function escapeHtml(str){
-    return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+  function renderChat(store){
+    const chat = getActiveChat(store);
+    chatBox.innerHTML = "";
+    if(!chat) return;
+
+    chatTitle.textContent = chat.name;
+
+    chat.messages.forEach(m => {
+      chatBox.appendChild(renderMessage(m));
+    });
+    chatBox.scrollTop = chatBox.scrollHeight;
   }
 
-  function pushMessage(role, content){
-    const s = loadStore();
-    const c = s.chats[s.activeId];
-    const timeStr = nowTime();
-    c.messages.push({ role, content, time: timeStr });
-    c.updatedAt = Date.now();
-
-    // Auto-título con la primera pregunta
-    if ((c.title === "Chat" || c.title === "Nuevo chat") && role === "user" && c.messages.length <= 2){
-      c.title = content.slice(0, 28) + (content.length > 28 ? "…" : "");
-    }
-
-    saveStore(s);
-    renderChatList();
-  }
-
-  function clearActiveChat(){
-    const s = loadStore();
-    const c = s.chats[s.activeId];
-    c.messages = [];
-    c.updatedAt = Date.now();
-    saveStore(s);
-
-    addMessage("bot", "Listo. Empecemos de nuevo. ¿Qué quieres analizar?");
-    pushMessage("bot", "Listo. Empecemos de nuevo. ¿Qué quieres analizar?");
-    showToast("Chat limpiado");
+  function renderAll(store){
+    renderSidebar(store);
+    renderChat(store);
   }
 
   // =========================
-  // NETWORK
+  // Reply extraction (fix JSON printed)
   // =========================
-  function extractReply(data){
-    // soporta:
-    // {reply:"..."}  | {output:"..."} | [{"output":"..."}]
-    if (Array.isArray(data) && data.length > 0){
-      const x = data[0];
-      return x.reply ?? x.output ?? x.text ?? x.message ?? JSON.stringify(x);
+  function extractReply(d){
+    if (d && typeof d.reply === "string") return d.reply;
+    if (d && typeof d.output === "string") return d.output;
+    if (d && typeof d.text === "string") return d.text;
+    if (d && typeof d.message === "string") return d.message;
+
+    if (Array.isArray(d) && d[0] && typeof d[0].reply === "string") return d[0].reply;
+    if (Array.isArray(d) && d[0] && typeof d[0].output === "string") return d[0].output;
+    if (Array.isArray(d) && d[0] && typeof d[0].text === "string") return d[0].text;
+
+    // if n8n returns { data: [...] }
+    if (d && d.data && Array.isArray(d.data)){
+      const x = d.data[0];
+      if (x?.reply) return x.reply;
+      if (x?.output) return x.output;
+      if (x?.text) return x.text;
     }
-    return data.reply ?? data.output ?? data.text ?? data.message ?? JSON.stringify(data);
+    return (typeof d === "string") ? d : JSON.stringify(d);
   }
 
+  // =========================
+  // Messaging
+  // =========================
   async function send(){
-    const text = input.value.trim();
+    const text = (input.value || "").trim();
     if(!text) return;
 
-    input.value = "";
-    addMessage("user", text);
-    pushMessage("user", text);
+    const store = loadStore();
+    const chat = getActiveChat(store);
+    if(!chat) return;
 
-    const typingRow = addMessage("bot", "", null, true);
+    // push user msg
+    chat.messages.push({ role:"user", text, ts: Date.now() });
+    chat.updatedAt = Date.now();
+    input.value = "";
+    saveStore(store);
+    renderAll(store);
+
+    // typing
+    const typingNode = renderTyping();
+    chatBox.appendChild(typingNode);
+    chatBox.scrollTop = chatBox.scrollHeight;
 
     try{
-      // form-urlencoded para reducir CORS/preflight
+      // sessionId per chat
+      const sessionId = chat.id;
+
       const res = await fetch(WEBHOOK_URL, {
-        method:"POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
-        body: new URLSearchParams({ message: text, sessionId: SESSION_ID })
+        method: "POST",
+        headers: { "Content-Type":"application/json" },
+        body: JSON.stringify({ message: text, sessionId })
       });
 
       if(!res.ok){
@@ -708,62 +828,107 @@
       const data = await res.json();
       const reply = extractReply(data);
 
-      typingRow.querySelector(".bubble").textContent = reply;
-      pushMessage("bot", reply);
+      // remove typing node
+      typingNode.remove();
+
+      chat.messages.push({ role:"bot", text: reply, ts: Date.now() });
+      chat.updatedAt = Date.now();
+      saveStore(store);
 
       setStatus(true, "Conectado");
+      renderAll(store);
     }catch(err){
-      typingRow.querySelector(".bubble").textContent =
-        "⚠️ No pude conectar con n8n. Si esto pasa siempre, es CORS/OPTIONS o el workflow no está activo.";
-      pushMessage("bot", "⚠️ No pude conectar con n8n.");
+      typingNode.remove();
+      chat.messages.push({
+        role:"bot",
+        text: "⚠️ No pude conectar con n8n. Si a veces sí conecta, casi siempre es CORS o el webhook está en modo test/no activo.",
+        ts: Date.now()
+      });
+      chat.updatedAt = Date.now();
+      saveStore(store);
+
       setStatus(false, "Error");
+      renderAll(store);
       console.error(err);
     }
   }
 
   // =========================
-  // EVENTS
+  // Buttons
   // =========================
-  input.addEventListener("keydown", (e) => {
+  sendBtn.addEventListener("click", send);
+  input.addEventListener("keydown", (e)=>{
     if(e.key === "Enter" && !e.shiftKey){
       e.preventDefault();
       send();
     }
   });
-  sendBtn.addEventListener("click", send);
-  clearBtn.addEventListener("click", clearActiveChat);
+
+  clearChatBtn.addEventListener("click", ()=>{
+    const store = loadStore();
+    const chat = getActiveChat(store);
+    if(!chat) return;
+    if(!confirm("¿Limpiar esta conversación?")) return;
+
+    chat.messages = [{ role:"bot", text:"Listo. ¿Qué quieres analizar ahora?", ts: Date.now() }];
+    chat.updatedAt = Date.now();
+    saveStore(store);
+    renderAll(store);
+  });
+
+  clearAllBtn.addEventListener("click", ()=>{
+    if(!confirm("¿Borrar TODAS las conversaciones?")) return;
+    const store = { activeId: null, chats: [] };
+    const c = createChat("Chat");
+    store.chats.push(c);
+    store.activeId = c.id;
+    saveStore(store);
+    renderAll(store);
+  });
 
   newChatBtn.addEventListener("click", ()=>{
-    newChat("Nuevo chat");
-    renderChatList();
-    renderMessages();
-    showToast("Nuevo chat");
+    const store = loadStore();
+    const c = createChat("Chat " + nowStr());
+    store.chats.push(c);
+    store.activeId = c.id;
+    saveStore(store);
+    renderAll(store);
   });
 
-  deleteChatBtn.addEventListener("click", ()=>{
-    deleteActive();
-    renderChatList();
-    renderMessages();
-    showToast("Chat borrado");
+  exportBtn.addEventListener("click", ()=>{
+    const store = loadStore();
+    const blob = new Blob([JSON.stringify(store, null, 2)], {type:"application/json"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "frijobot_history.json";
+    a.click();
+    URL.revokeObjectURL(a.href);
   });
 
-  searchBox.addEventListener("input", renderChatList);
+  search.addEventListener("input", ()=>{
+    const store = loadStore();
+    renderSidebar(store);
+  });
+
+  document.getElementById("privacy").addEventListener("click", (e)=>{
+    e.preventDefault();
+    alert("FRIJOBOT procesa tus mensajes para responder con datos. Evita compartir información sensible si no es necesario.");
+  });
 
   // =========================
-  // INIT
+  // Init
   // =========================
   (function init(){
-    const s = loadStore();
-    if (!s.activeId || !s.chats[s.activeId]) {
-      newChat("Chat");
+    let store = loadStore();
+    if(!store.chats || store.chats.length === 0){
+      const c = createChat("Chat");
+      store = { activeId: c.id, chats: [c] };
+      saveStore(store);
+    }else if(!store.activeId){
+      store.activeId = store.chats[0].id;
+      saveStore(store);
     }
-    // mensaje inicial si está vacío
-    const c = getActiveChat();
-    if (!c.messages.length){
-      pushMessage("bot", "Hola 👋 Soy FRIJOBOT. ¿Qué quieres analizar hoy?");
-    }
-    renderChatList();
-    renderMessages();
+    renderAll(store);
     setStatus(false, "Sin conectar");
   })();
 </script>
