@@ -4,85 +4,93 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>FRIJOBOT</title>
-  <meta name="description" content="FRIJOBOT — Chat inteligente conectado a tu operación." />
+  <meta name="description" content="FRIJOBOT — Asistente inteligente conectado a tu operación." />
 
   <style>
     :root{
-      --bg:#0b1020;
-      --panel:#0f1733;
-      --panel2:#0c1330;
-      --text:#e7ecff;
-      --muted:#9aa7d8;
+      --bg:#07120d;
+      --bg2:#050f0b;
+      --panel:rgba(255,255,255,.04);
+      --panel2:rgba(255,255,255,.06);
+      --text:#eafff6;
+      --muted:#a6c6b7;
       --border:rgba(255,255,255,.10);
-      --shadow: 0 20px 60px rgba(0,0,0,.45);
-      --brand:#7c5cff;
-      --brand2:#22d3ee;
+      --shadow: 0 20px 70px rgba(0,0,0,.55);
+
+      --g1:#22c55e; /* green */
+      --g2:#10b981; /* emerald */
+      --g3:#14b8a6; /* teal */
+
       --danger:#ff4d6d;
       --ok:#34d399;
+
       --radius:18px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
     }
     *{box-sizing:border-box}
+    html,body{height:100%}
     body{
       margin:0;
-      min-height:100vh;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      background:
-        radial-gradient(1200px 600px at 10% 10%, rgba(124,92,255,.35), transparent 55%),
-        radial-gradient(900px 500px at 90% 20%, rgba(34,211,238,.22), transparent 60%),
-        radial-gradient(900px 700px at 40% 90%, rgba(52,211,153,.14), transparent 60%),
-        var(--bg);
+      font-family: var(--sans);
       color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 15% 10%, rgba(34,197,94,.22), transparent 55%),
+        radial-gradient(900px 500px at 85% 20%, rgba(16,185,129,.18), transparent 60%),
+        radial-gradient(900px 700px at 45% 90%, rgba(20,184,166,.12), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
       display:flex;
       justify-content:center;
-      padding:28px 18px;
+      padding:20px;
     }
-    .app{
-      width:min(980px, 100%);
+
+    .shell{
+      width:min(1200px, 100%);
+      height:min(86vh, 820px);
       display:grid;
-      grid-template-rows:auto 1fr auto;
+      grid-template-columns: 320px 1fr;
       gap:14px;
+    }
+
+    /* Sidebar */
+    .side{
       border:1px solid var(--border);
       background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
       border-radius: calc(var(--radius) + 6px);
       box-shadow: var(--shadow);
       overflow:hidden;
-    }
-    header{
       display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:16px 16px 14px;
-      background: linear-gradient(180deg, rgba(15,23,51,.92), rgba(15,23,51,.55));
+      flex-direction:column;
+      min-height:0;
+    }
+    .sideHeader{
+      padding:14px 14px 12px;
       border-bottom:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
       backdrop-filter: blur(10px);
     }
-    .brand{
-      display:flex; align-items:center; gap:12px;
-      min-width:0;
+    .brandRow{
+      display:flex;
+      align-items:center;
+      gap:10px;
     }
     .logo{
-      width:38px; height:38px;
-      border-radius:12px;
-      background: linear-gradient(135deg, var(--brand), var(--brand2));
-      display:grid; place-items:center;
-      font-weight:900;
-      color:#061022;
-      box-shadow: 0 10px 30px rgba(124,92,255,.25);
+      width:44px; height:44px;
+      border-radius:14px;
+      border:1px solid rgba(34,197,94,.35);
+      background: linear-gradient(135deg, rgba(34,197,94,.25), rgba(20,184,166,.18));
       overflow:hidden;
+      display:grid;
+      place-items:center;
       flex:0 0 auto;
+      box-shadow: 0 12px 30px rgba(34,197,94,.12);
     }
-    .logo img{
-      width:100%; height:100%; object-fit:cover;
-      display:none;
-    }
-    .titles{
-      display:flex; flex-direction:column;
-      min-width:0;
-    }
+    .logo img{width:100%;height:100%;object-fit:cover;display:block}
+    .titles{min-width:0}
     .titles h1{
-      font-size:16px;
       margin:0;
-      letter-spacing:.6px;
+      font-size:14px;
+      letter-spacing:.7px;
       text-transform:uppercase;
       white-space:nowrap;
       overflow:hidden;
@@ -96,9 +104,96 @@
       overflow:hidden;
       text-overflow:ellipsis;
     }
-    .actions{
-      display:flex; align-items:center; gap:10px;
-      flex:0 0 auto;
+
+    .sideActions{
+      margin-top:10px;
+      display:flex;
+      gap:8px;
+    }
+
+    .btn{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+      border-radius:12px;
+      padding:10px 10px;
+      cursor:pointer;
+      transition:.15s transform, .15s background, .15s border-color;
+      font-weight:800;
+      font-size:13px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      width:100%;
+    }
+    .btn:hover{ background: rgba(255,255,255,.06); border-color: rgba(34,197,94,.28); }
+    .btn:active{ transform: translateY(1px); }
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(34,197,94,.22), rgba(20,184,166,.18));
+      border-color: rgba(34,197,94,.30);
+    }
+
+    .search{
+      margin-top:10px;
+      display:flex;
+      gap:8px;
+    }
+    .search input{
+      width:100%;
+      padding:10px 10px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      outline:none;
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      font-size:13px;
+    }
+
+    .chatList{
+      padding:10px;
+      overflow:auto;
+      min-height:0;
+    }
+    .chatItem{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      border-radius:14px;
+      padding:10px 10px;
+      cursor:pointer;
+      transition:.15s background, .15s border-color;
+      margin-bottom:8px;
+    }
+    .chatItem:hover{ background: rgba(255,255,255,.05); border-color: rgba(34,197,94,.20); }
+    .chatItem.active{
+      border-color: rgba(34,197,94,.45);
+      background: rgba(34,197,94,.08);
+    }
+    .chatItem .t{
+      font-weight:900;
+      font-size:13px;
+      margin-bottom:4px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .chatItem .s{
+      color:var(--muted);
+      font-size:12px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .sideFooter{
+      padding:10px 12px;
+      border-top:1px solid var(--border);
+      color:var(--muted);
+      font-size:12px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
     }
     .pill{
       font-size:12px;
@@ -118,26 +213,71 @@
       background: var(--ok);
       box-shadow: 0 0 0 4px rgba(52,211,153,.14);
     }
-    button{
+
+    /* Main */
+    .main{
+      border:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border-radius: calc(var(--radius) + 6px);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      display:grid;
+      grid-template-rows:auto 1fr auto;
+      min-height:0;
+    }
+    .mainHeader{
+      padding:14px 14px 12px;
+      /* header más premium */
+      background: linear-gradient(180deg, rgba(34,197,94,.10), rgba(255,255,255,.02));
+      border-bottom:1px solid var(--border);
+      backdrop-filter: blur(10px);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .mainHeader .left{
+      display:flex;
+      flex-direction:column;
+      min-width:0;
+    }
+    .mainHeader .left .h{
+      font-weight:1000;
+      letter-spacing:.4px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .mainHeader .left .p{
+      color:var(--muted);
+      font-size:12px;
+      margin-top:2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .mainHeader .right{
+      display:flex;
+      gap:8px;
+      flex:0 0 auto;
+    }
+    .btnSmall{
       border:1px solid var(--border);
       background: rgba(255,255,255,.04);
       color:var(--text);
       border-radius:12px;
-      padding:9px 11px;
+      padding:9px 10px;
       cursor:pointer;
-      transition:.15s transform, .15s background;
-      font-weight:700;
+      font-weight:900;
+      font-size:12px;
     }
-    button:hover{ background: rgba(255,255,255,.06); }
-    button:active{ transform: translateY(1px); }
-    main{ padding:0 16px 10px; }
+    .btnSmall:hover{ background: rgba(255,255,255,.06); border-color: rgba(34,197,94,.28); }
+
     .chat{
-      height: min(68vh, 680px);
       overflow:auto;
       padding:14px;
-      background: rgba(10,16,36,.35);
-      border:1px solid var(--border);
-      border-radius: var(--radius);
+      background: rgba(0,0,0,.18);
+      min-height:0;
     }
     .msg{
       display:flex;
@@ -153,13 +293,13 @@
       display:grid; place-items:center;
       flex:0 0 auto;
       color:var(--muted);
-      font-weight:900;
+      font-weight:1000;
       user-select:none;
     }
-    .avatar.user{ color:#a9f0ff; border-color: rgba(34,211,238,.22); }
-    .avatar.bot{ color:#cbbdff; border-color: rgba(124,92,255,.22); }
+    .avatar.user{ color:#b9ffe0; border-color: rgba(34,197,94,.22); }
+    .avatar.bot{ color:#b7fff3; border-color: rgba(20,184,166,.22); }
     .bubble{
-      max-width: 760px;
+      max-width: 820px;
       padding:12px 12px;
       border-radius: 16px;
       border:1px solid var(--border);
@@ -168,8 +308,14 @@
       white-space:pre-wrap;
       word-break:break-word;
     }
-    .bubble.user{ background: rgba(34,211,238,.06); border-color: rgba(34,211,238,.18); }
-    .bubble.bot{ background: rgba(124,92,255,.06); border-color: rgba(124,92,255,.18); }
+    .bubble.user{
+      background: rgba(34,197,94,.07);
+      border-color: rgba(34,197,94,.18);
+    }
+    .bubble.bot{
+      background: rgba(20,184,166,.07);
+      border-color: rgba(20,184,166,.18);
+    }
     .meta{
       margin-top:6px;
       font-size:11px;
@@ -182,7 +328,7 @@
     }
     .typing span{
       width:7px; height:7px; border-radius:99px;
-      background: rgba(255,255,255,.38);
+      background: rgba(234,255,246,.55);
       animation: bounce 1s infinite ease-in-out;
     }
     .typing span:nth-child(2){ animation-delay:.12s }
@@ -191,20 +337,21 @@
       0%,80%,100%{ transform: translateY(0); opacity:.55 }
       40%{ transform: translateY(-6px); opacity:1 }
     }
-    footer{
-      padding:12px 16px 16px;
-      border-top:1px solid var(--border);
-      background: linear-gradient(0deg, rgba(15,23,51,.92), rgba(15,23,51,.55));
-    }
+
     .composer{
+      border-top:1px solid var(--border);
+      background: linear-gradient(0deg, rgba(34,197,94,.08), rgba(255,255,255,.02));
+      padding:12px 14px 14px;
+    }
+    .row{
       display:flex;
       gap:10px;
       align-items:flex-end;
     }
     textarea{
       width:100%;
-      min-height:44px;
-      max-height:140px;
+      min-height:46px;
+      max-height:160px;
       resize:none;
       padding:12px 12px;
       border-radius:14px;
@@ -224,10 +371,14 @@
       gap:10px;
       flex-wrap:wrap;
     }
-    .link{
-      color:#cbbdff;
-      text-decoration:none;
-      border-bottom:1px dashed rgba(203,189,255,.5);
+    .kbd{
+      font-family: var(--mono);
+      font-size:12px;
+      padding:2px 6px;
+      border:1px solid var(--border);
+      border-radius:10px;
+      background: rgba(255,255,255,.03);
+      color:#dfffea;
     }
     .toast{
       position:fixed;
@@ -248,56 +399,76 @@
       z-index:50;
     }
     .toast.show{ display:flex; }
-    .small{ font-size:12px; color:var(--muted); }
-    code.inline{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size:12px;
-      padding:2px 6px;
-      border:1px solid var(--border);
-      border-radius:999px;
-      background: rgba(255,255,255,.03);
-      color: #dbe4ff;
+
+    @media (max-width: 980px){
+      .shell{ grid-template-columns: 1fr; height:auto; }
+      .side{ height:420px; }
+      .main{ height:min(86vh, 820px); }
     }
   </style>
 </head>
 
 <body>
-  <div class="app">
-    <header>
-      <div class="brand">
-        <div class="logo" id="logoBox" title="FRIJOBOT">
-          <span id="logoFallback">F</span>
-          <img id="logoImg" alt="Logo FRIJOBOT" />
+  <div class="shell">
+    <!-- Sidebar -->
+    <aside class="side">
+      <div class="sideHeader">
+        <div class="brandRow">
+          <div class="logo" title="Logo">
+            <img src="logo.png" alt="Traxión logo" />
+          </div>
+          <div class="titles">
+            <h1>FRIJOBOT</h1>
+            <p>Traxión • Vida en movimiento</p>
+          </div>
         </div>
-        <div class="titles">
-          <h1>FRIJOBOT</h1>
-          <p>Asistente inteligente para operación y datos</p>
+
+        <div class="sideActions">
+          <button class="btn primary" id="newChatBtn">＋ Nuevo chat</button>
+          <button class="btn" id="deleteChatBtn">🗑️ Borrar</button>
+        </div>
+
+        <div class="search">
+          <input id="searchBox" placeholder="Buscar conversación…" />
         </div>
       </div>
 
-      <div class="actions">
+      <div class="chatList" id="chatList"></div>
+
+      <div class="sideFooter">
         <div class="pill" title="Estado de conexión">
           <span class="dot" id="statusDot"></span>
           <span id="statusText">Sin conectar</span>
         </div>
-        <button id="clearBtn" title="Borrar conversación">Limpiar</button>
+        <div>Enter envía · Shift+Enter salto</div>
       </div>
-    </header>
+    </aside>
 
-    <main>
+    <!-- Main -->
+    <main class="main">
+      <div class="mainHeader">
+        <div class="left">
+          <div class="h" id="chatTitle">Chat</div>
+          <div class="p" id="chatSubtitle">Pregúntame sobre operación, siniestros, flota, NPS, MTTO, etc.</div>
+        </div>
+        <div class="right">
+          <button class="btnSmall" id="clearBtn">Limpiar chat</button>
+        </div>
+      </div>
+
       <div class="chat" id="chat"></div>
-      <div class="hint">
-        <div class="small">Tip: <b>Enter</b> envía · <b>Shift+Enter</b> salto de línea</div>
-        <div class="small">Webhook: <code class="inline">/webhook/chat</code> · <a class="link" href="#" id="privacyLink">Aviso</a></div>
+
+      <div class="composer">
+        <div class="row">
+          <textarea id="input" placeholder="Escribe tu pregunta…"></textarea>
+          <button class="btn primary" style="width:160px" id="sendBtn">Enviar</button>
+        </div>
+        <div class="hint">
+          <div>Tip: <span class="kbd">Enter</span> envía · <span class="kbd">Shift+Enter</span> salto de línea</div>
+          <div>Endpoint: <span class="kbd">/webhook/chat</span></div>
+        </div>
       </div>
     </main>
-
-    <footer>
-      <div class="composer">
-        <textarea id="input" placeholder="Escribe tu pregunta…"></textarea>
-        <button id="sendBtn">Enviar</button>
-      </div>
-    </footer>
   </div>
 
   <div class="toast" id="toast">
@@ -311,18 +482,76 @@
   // =========================
   const WEBHOOK_URL = "https://auto.mindtrax.io/webhook/chat";
 
-  // Si quieres poner logo:
-  // 1) Sube un archivo "logo.png" al repo (misma carpeta que index.html)
-  // 2) Descomenta la línea siguiente:
-  // setLogo("logo.png");
+  // =========================
+  // SESSION (por navegador)
+  // =========================
+  const SESSION_ID = (() => {
+    const key = "frijobot_session_id";
+    let id = localStorage.getItem(key);
+    if (!id) {
+      id = (crypto?.randomUUID?.() || ("sid_" + Math.random().toString(16).slice(2) + Date.now()));
+      localStorage.setItem(key, id);
+    }
+    return id;
+  })();
 
   // =========================
-  // UI helpers
+  // STORAGE: chats tipo ChatGPT
   // =========================
-  const chat = document.getElementById("chat");
+  const STORE_KEY = "frijobot_chats_v1";
+  function loadStore(){
+    try{
+      return JSON.parse(localStorage.getItem(STORE_KEY) || "null") || { activeId:null, chats:{} };
+    }catch{ return { activeId:null, chats:{} }; }
+  }
+  function saveStore(s){ localStorage.setItem(STORE_KEY, JSON.stringify(s)); }
+
+  function newChat(title="Nuevo chat"){
+    const s = loadStore();
+    const id = "c_" + (crypto?.randomUUID?.() || (Date.now()+"_"+Math.random().toString(16).slice(2)));
+    s.chats[id] = { id, title, updatedAt: Date.now(), messages: [] };
+    s.activeId = id;
+    saveStore(s);
+    return id;
+  }
+
+  function getActiveChat(){
+    const s = loadStore();
+    if (!s.activeId || !s.chats[s.activeId]) {
+      const id = newChat("Chat");
+      return loadStore().chats[id];
+    }
+    return s.chats[s.activeId];
+  }
+
+  function setActive(id){
+    const s = loadStore();
+    if (s.chats[id]) { s.activeId = id; saveStore(s); }
+  }
+
+  function deleteActive(){
+    const s = loadStore();
+    const id = s.activeId;
+    if (id && s.chats[id]) delete s.chats[id];
+    const keys = Object.keys(s.chats);
+    s.activeId = keys[0] || null;
+    if (!s.activeId) newChat("Chat");
+    saveStore(s);
+  }
+
+  // =========================
+  // UI
+  // =========================
+  const chatEl = document.getElementById("chat");
   const input = document.getElementById("input");
   const sendBtn = document.getElementById("sendBtn");
   const clearBtn = document.getElementById("clearBtn");
+  const newChatBtn = document.getElementById("newChatBtn");
+  const deleteChatBtn = document.getElementById("deleteChatBtn");
+  const chatListEl = document.getElementById("chatList");
+  const searchBox = document.getElementById("searchBox");
+  const chatTitle = document.getElementById("chatTitle");
+  const chatSubtitle = document.getElementById("chatSubtitle");
   const statusDot = document.getElementById("statusDot");
   const statusText = document.getElementById("statusText");
   const toast = document.getElementById("toast");
@@ -331,20 +560,28 @@
   function showToast(text){
     toastText.textContent = text;
     toast.classList.add("show");
-    setTimeout(()=>toast.classList.remove("show"), 1600);
+    setTimeout(()=>toast.classList.remove("show"), 1400);
   }
-
   function setStatus(ok, text){
     statusDot.classList.toggle("ok", !!ok);
     statusText.textContent = text;
   }
-
   function nowTime(){
     const d = new Date();
     return d.toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
   }
 
-  function addMessage(role, content, isTyping=false){
+  function renderMessages(){
+    const c = getActiveChat();
+    chatTitle.textContent = c.title || "Chat";
+    chatEl.innerHTML = "";
+    for (const m of c.messages){
+      addMessage(m.role, m.content, m.time, false);
+    }
+    chatEl.scrollTop = chatEl.scrollHeight;
+  }
+
+  function addMessage(role, content, timeStr=null, isTyping=false){
     const row = document.createElement("div");
     row.className = "msg";
 
@@ -354,16 +591,15 @@
 
     const bubble = document.createElement("div");
     bubble.className = "bubble " + (role === "user" ? "user" : "bot");
+    bubble.innerHTML = isTyping
+      ? `<span class="typing"><span></span><span></span><span></span></span>`
+      : "";
 
-    if(isTyping){
-      bubble.innerHTML = `<span class="typing"><span></span><span></span><span></span></span>`;
-    } else {
-      bubble.textContent = content;
-    }
+    if(!isTyping) bubble.textContent = content;
 
     const meta = document.createElement("div");
     meta.className = "meta";
-    meta.textContent = nowTime();
+    meta.textContent = timeStr || nowTime();
 
     const col = document.createElement("div");
     col.appendChild(bubble);
@@ -372,61 +608,96 @@
     row.appendChild(avatar);
     row.appendChild(col);
 
-    chat.appendChild(row);
-    chat.scrollTop = chat.scrollHeight;
+    chatEl.appendChild(row);
+    chatEl.scrollTop = chatEl.scrollHeight;
     return row;
   }
 
-  function saveHistory(){
-    localStorage.setItem("frijobot_history", chat.innerHTML);
-  }
+  function renderChatList(){
+    const s = loadStore();
+    const q = (searchBox.value || "").toLowerCase().trim();
+    const chats = Object.values(s.chats)
+      .sort((a,b)=> (b.updatedAt||0) - (a.updatedAt||0))
+      .filter(c => !q || (c.title||"").toLowerCase().includes(q) || (c.messages?.[0]?.content||"").toLowerCase().includes(q));
 
-  function loadHistory(){
-    const html = localStorage.getItem("frijobot_history");
-    if(html){
-      chat.innerHTML = html;
-      chat.scrollTop = chat.scrollHeight;
-    } else {
-      addMessage("bot", "Hola 👋 Soy FRIJOBOT. ¿Qué quieres analizar hoy?");
-      saveHistory();
+    chatListEl.innerHTML = "";
+    for (const c of chats){
+      const item = document.createElement("div");
+      item.className = "chatItem" + (c.id === s.activeId ? " active" : "");
+      item.innerHTML = `
+        <div class="t">${escapeHtml(c.title || "Chat")}</div>
+        <div class="s">${escapeHtml((c.messages?.slice(-1)[0]?.content || "Sin mensajes").slice(0,80))}</div>
+      `;
+      item.addEventListener("click", ()=>{
+        setActive(c.id);
+        renderChatList();
+        renderMessages();
+      });
+      chatListEl.appendChild(item);
     }
   }
 
-  function clearHistory(){
-    localStorage.removeItem("frijobot_history");
-    chat.innerHTML = "";
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+  }
+
+  function pushMessage(role, content){
+    const s = loadStore();
+    const c = s.chats[s.activeId];
+    const timeStr = nowTime();
+    c.messages.push({ role, content, time: timeStr });
+    c.updatedAt = Date.now();
+
+    // Auto-título con la primera pregunta
+    if ((c.title === "Chat" || c.title === "Nuevo chat") && role === "user" && c.messages.length <= 2){
+      c.title = content.slice(0, 28) + (content.length > 28 ? "…" : "");
+    }
+
+    saveStore(s);
+    renderChatList();
+  }
+
+  function clearActiveChat(){
+    const s = loadStore();
+    const c = s.chats[s.activeId];
+    c.messages = [];
+    c.updatedAt = Date.now();
+    saveStore(s);
+
     addMessage("bot", "Listo. Empecemos de nuevo. ¿Qué quieres analizar?");
-    saveHistory();
-    showToast("Conversación limpiada");
-  }
-
-  function setLogo(path){
-    const img = document.getElementById("logoImg");
-    const fallback = document.getElementById("logoFallback");
-    img.src = path;
-    img.onload = () => { img.style.display="block"; fallback.style.display="none"; };
+    pushMessage("bot", "Listo. Empecemos de nuevo. ¿Qué quieres analizar?");
+    showToast("Chat limpiado");
   }
 
   // =========================
-  // Messaging
+  // NETWORK
   // =========================
+  function extractReply(data){
+    // soporta:
+    // {reply:"..."}  | {output:"..."} | [{"output":"..."}]
+    if (Array.isArray(data) && data.length > 0){
+      const x = data[0];
+      return x.reply ?? x.output ?? x.text ?? x.message ?? JSON.stringify(x);
+    }
+    return data.reply ?? data.output ?? data.text ?? data.message ?? JSON.stringify(data);
+  }
+
   async function send(){
     const text = input.value.trim();
     if(!text) return;
 
     input.value = "";
     addMessage("user", text);
-    saveHistory();
+    pushMessage("user", text);
 
-    const typingRow = addMessage("bot", "", true);
+    const typingRow = addMessage("bot", "", null, true);
 
     try{
-      // IMPORTANTE: El workflow de n8n debe devolver JSON con { "reply": "..." }
-      // Si tu workflow devuelve otro nombre, abajo hacemos fallback.
+      // form-urlencoded para reducir CORS/preflight
       const res = await fetch(WEBHOOK_URL, {
         method:"POST",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({ message: text })
+        headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+        body: new URLSearchParams({ message: text, sessionId: SESSION_ID })
       });
 
       if(!res.ok){
@@ -435,44 +706,66 @@
       }
 
       const data = await res.json();
-      const reply =
-        data.reply ??
-        data.output ??
-        data.text ??
-        data.message ??
-        JSON.stringify(data);
+      const reply = extractReply(data);
 
       typingRow.querySelector(".bubble").textContent = reply;
+      pushMessage("bot", reply);
 
       setStatus(true, "Conectado");
-      saveHistory();
     }catch(err){
       typingRow.querySelector(".bubble").textContent =
-        "⚠️ No pude conectar con el servidor. Casi siempre es CORS en el webhook.";
-      typingRow.querySelector(".meta").textContent = nowTime();
+        "⚠️ No pude conectar con n8n. Si esto pasa siempre, es CORS/OPTIONS o el workflow no está activo.";
+      pushMessage("bot", "⚠️ No pude conectar con n8n.");
       setStatus(false, "Error");
       console.error(err);
-      saveHistory();
     }
   }
 
+  // =========================
+  // EVENTS
+  // =========================
   input.addEventListener("keydown", (e) => {
     if(e.key === "Enter" && !e.shiftKey){
       e.preventDefault();
       send();
     }
   });
-
   sendBtn.addEventListener("click", send);
-  clearBtn.addEventListener("click", clearHistory);
+  clearBtn.addEventListener("click", clearActiveChat);
 
-  document.getElementById("privacyLink").addEventListener("click", (e)=>{
-    e.preventDefault();
-    alert("FRIJOBOT procesa tus mensajes para responder con datos. Evita compartir información sensible si no es necesario.");
+  newChatBtn.addEventListener("click", ()=>{
+    newChat("Nuevo chat");
+    renderChatList();
+    renderMessages();
+    showToast("Nuevo chat");
   });
 
-  loadHistory();
-  setStatus(false, "Sin conectar");
+  deleteChatBtn.addEventListener("click", ()=>{
+    deleteActive();
+    renderChatList();
+    renderMessages();
+    showToast("Chat borrado");
+  });
+
+  searchBox.addEventListener("input", renderChatList);
+
+  // =========================
+  // INIT
+  // =========================
+  (function init(){
+    const s = loadStore();
+    if (!s.activeId || !s.chats[s.activeId]) {
+      newChat("Chat");
+    }
+    // mensaje inicial si está vacío
+    const c = getActiveChat();
+    if (!c.messages.length){
+      pushMessage("bot", "Hola 👋 Soy FRIJOBOT. ¿Qué quieres analizar hoy?");
+    }
+    renderChatList();
+    renderMessages();
+    setStatus(false, "Sin conectar");
+  })();
 </script>
 </body>
 </html>
