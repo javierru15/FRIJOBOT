@@ -5,38 +5,39 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>FRIJOBOT</title>
   <meta name="description" content="FRIJOBOT — Asistente inteligente conectado a tu operación." />
-  <meta name="theme-color" content="#06140C" />
+  <meta name="theme-color" content="#F6F8F7" />
 
   <style>
     :root{
-      /* Traxión-ish: deep black/green + premium glass */
-      --bg0:#050807;
-      --bg1:#06140C;
-      --panel:#0A1A12;
-      --panel2:#08130D;
+      /* Light, minimal, premium (Traxión-ish accent) */
+      --bg0:#F6F8F7;
+      --bg1:#FFFFFF;
 
-      --card: rgba(255,255,255,.05);
-      --card2: rgba(255,255,255,.08);
+      --surface:#FFFFFF;
+      --surface2:rgba(255,255,255,.78);
 
-      --border: rgba(255,255,255,.10);
-      --border2: rgba(255,255,255,.18);
+      --border: rgba(2, 6, 23, .10);
+      --border2: rgba(2, 6, 23, .16);
 
-      --text:#EAF7F0;
-      --muted:#A7B8AE;
+      --text:#0B1220;        /* slate-ish */
+      --muted:#5A6776;       /* secondary */
+      --muted2:#7B8796;
 
-      --brand:#22C55E;
-      --brand2:#16A34A;
-      --danger:#EF4444;
-      --warn:#F59E0B;
+      --brand:#16A34A;       /* green */
+      --brand2:#22C55E;
+      --danger:#DC2626;
+      --warn:#D97706;
 
-      --shadow: 0 24px 70px rgba(0,0,0,.55);
-      --shadow2: 0 12px 34px rgba(0,0,0,.45);
+      --shadow: 0 18px 50px rgba(2,6,23,.10);
+      --shadow2: 0 10px 26px rgba(2,6,23,.08);
 
-      --r: 18px;
-      --r2: 22px;
+      --r: 14px;
+      --r2: 18px;
 
       --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+
+      --focus: 0 0 0 4px rgba(34,197,94,.18);
     }
 
     *{ box-sizing:border-box; }
@@ -46,25 +47,26 @@
       font-family: var(--font);
       color: var(--text);
       background:
-        radial-gradient(900px 560px at 14% 10%, rgba(34,197,94,.18), transparent 60%),
-        radial-gradient(900px 520px at 86% 6%, rgba(34,197,94,.10), transparent 55%),
-        radial-gradient(1100px 820px at 50% 100%, rgba(255,255,255,.07), transparent 60%),
+        radial-gradient(900px 500px at 12% 8%, rgba(34,197,94,.12), transparent 55%),
+        radial-gradient(900px 520px at 86% 10%, rgba(34,197,94,.08), transparent 55%),
         linear-gradient(180deg, var(--bg0), var(--bg1));
       overflow-x:hidden;
     }
 
-    /* Soft grain */
+    /* Subtle grid + grain (very light) */
     body:before{
       content:"";
       position:fixed;
       inset:0;
       pointer-events:none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
-      opacity:.10;
-      mix-blend-mode: overlay;
+      background-image:
+        linear-gradient(rgba(2,6,23,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(2,6,23,.03) 1px, transparent 1px);
+      background-size: 44px 44px;
+      opacity:.35;
+      mask-image: radial-gradient(700px 420px at 50% 0%, black 10%, transparent 65%);
     }
 
-    /* Container */
     .wrap{
       width:min(1280px, 100%);
       margin:0 auto;
@@ -80,7 +82,7 @@
       padding: 12px 14px;
       border-radius: var(--r2);
       border: 1px solid var(--border);
-      background: linear-gradient(180deg, rgba(8,19,13,.78), rgba(8,19,13,.48));
+      background: rgba(255,255,255,.72);
       backdrop-filter: blur(12px);
       box-shadow: var(--shadow2);
     }
@@ -93,12 +95,12 @@
     }
 
     .logoWrap{
-      width:46px; height:46px;
+      width:44px; height:44px;
       border-radius: 14px;
       overflow:hidden;
-      border: 1px solid rgba(34,197,94,.30);
-      background: linear-gradient(135deg, rgba(34,197,94,.25), rgba(255,255,255,.06));
-      box-shadow: 0 18px 45px rgba(34,197,94,.10);
+      border: 1px solid rgba(22,163,74,.25);
+      background: linear-gradient(135deg, rgba(34,197,94,.20), rgba(2,6,23,.04));
+      box-shadow: 0 12px 30px rgba(22,163,74,.10);
       display:grid;
       place-items:center;
       flex:0 0 auto;
@@ -109,6 +111,7 @@
       object-fit:cover;
       display:block;
     }
+
     .brandText{
       min-width:0;
       display:flex;
@@ -116,10 +119,10 @@
       gap:2px;
     }
     .brandText .title{
-      font-weight: 950;
-      letter-spacing:.5px;
+      font-weight: 900;
+      letter-spacing:.4px;
       text-transform: uppercase;
-      font-size: 14px;
+      font-size: 13px;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
@@ -143,48 +146,49 @@
       display:flex;
       align-items:center;
       gap:10px;
-      padding: 9px 12px;
+      padding: 8px 12px;
       border-radius: 999px;
       border: 1px solid var(--border);
-      background: rgba(255,255,255,.05);
+      background: rgba(255,255,255,.72);
       backdrop-filter: blur(10px);
       font-size: 12px;
       color: var(--muted);
-      box-shadow: 0 10px 28px rgba(0,0,0,.35);
     }
     .dot{
       width:10px; height:10px; border-radius:999px;
       background: var(--danger);
-      box-shadow: 0 0 0 4px rgba(239,68,68,.14);
+      box-shadow: 0 0 0 4px rgba(220,38,38,.12);
     }
     .dot.ok{
-      background: var(--brand);
+      background: var(--brand2);
       box-shadow: 0 0 0 4px rgba(34,197,94,.16);
     }
 
     .btn{
       border: 1px solid var(--border);
-      background: rgba(255,255,255,.05);
+      background: rgba(255,255,255,.85);
       color: var(--text);
-      border-radius: 14px;
+      border-radius: 12px;
       padding: 10px 12px;
-      font-weight: 850;
+      font-weight: 800;
       cursor:pointer;
       transition: .15s transform, .15s background, .15s border, .15s box-shadow;
-      box-shadow: 0 10px 28px rgba(0,0,0,.25);
+      box-shadow: 0 8px 18px rgba(2,6,23,.06);
     }
     .btn:hover{
-      background: rgba(255,255,255,.08);
-      border-color: rgba(255,255,255,.18);
-      box-shadow: 0 14px 34px rgba(0,0,0,.35);
+      background: rgba(255,255,255,.95);
+      border-color: var(--border2);
+      box-shadow: 0 12px 26px rgba(2,6,23,.10);
     }
     .btn:active{ transform: translateY(1px); }
+    .btn:focus{ outline:none; box-shadow: var(--focus), 0 12px 26px rgba(2,6,23,.10); }
+
     .btn.primary{
-      border-color: rgba(34,197,94,.36);
-      background: linear-gradient(135deg, rgba(34,197,94,.20), rgba(255,255,255,.06));
+      border-color: rgba(22,163,74,.25);
+      background: linear-gradient(135deg, rgba(34,197,94,.22), rgba(255,255,255,.90));
     }
 
-    /* App layout */
+    /* Layout */
     .shell{
       margin-top: 14px;
       display:grid;
@@ -195,26 +199,24 @@
 
     @media (max-width: 980px){
       .shell{ grid-template-columns: 1fr; }
-      .sidebar{ order: 2; }
-      .main{ order: 1; }
     }
 
     /* Panels */
     .panel{
       border-radius: var(--r2);
       border: 1px solid var(--border);
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      background: rgba(255,255,255,.78);
+      backdrop-filter: blur(12px);
       box-shadow: var(--shadow);
       overflow:hidden;
-      min-height: 580px;
+      min-height: 600px;
     }
 
-    /* Sidebar */
+    /* Sidebar header */
     .sidebarHeader{
       padding: 14px 14px 12px;
-      border-bottom: 1px solid var(--border);
-      background: linear-gradient(180deg, rgba(8,19,13,.92), rgba(8,19,13,.60));
-      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(2,6,23,.08);
+      background: rgba(255,255,255,.70);
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -227,10 +229,11 @@
       gap:2px;
     }
     .sidebarHeader .h .t{
-      font-weight:950;
+      font-weight:900;
       text-transform:uppercase;
-      font-size: 12.5px;
-      letter-spacing:.4px;
+      font-size: 12px;
+      letter-spacing:.45px;
+      color: rgba(11,18,32,.88);
     }
     .sidebarHeader .h .s{
       font-size:12px;
@@ -241,21 +244,22 @@
     }
 
     .iconBtn{
-      width:38px;
-      height:38px;
-      border-radius: 14px;
+      width:40px;
+      height:40px;
+      border-radius: 12px;
       border: 1px solid var(--border);
-      background: rgba(255,255,255,.05);
+      background: rgba(255,255,255,.90);
       color: var(--text);
       cursor:pointer;
       display:grid;
       place-items:center;
       font-weight: 900;
-      transition:.15s background,.15s border;
+      transition:.15s background,.15s border,.15s box-shadow;
+      box-shadow: 0 8px 18px rgba(2,6,23,.06);
     }
     .iconBtn:hover{
-      background: rgba(255,255,255,.08);
-      border-color: rgba(255,255,255,.18);
+      border-color: var(--border2);
+      box-shadow: 0 12px 26px rgba(2,6,23,.10);
     }
 
     .sideBody{
@@ -267,15 +271,17 @@
 
     .search{
       width:100%;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.04);
-      border-radius: 16px;
+      border:1px solid rgba(2,6,23,.10);
+      background: rgba(255,255,255,.92);
+      border-radius: 14px;
       padding: 10px 12px;
       color: var(--text);
       outline:none;
       font-size: 13px;
+      transition: .15s border, .15s box-shadow;
     }
-    .search::placeholder{ color: rgba(167,184,174,.75); }
+    .search:focus{ border-color: rgba(22,163,74,.30); box-shadow: var(--focus); }
+    .search::placeholder{ color: rgba(90,103,118,.75); }
 
     .chatList{
       display:flex;
@@ -287,25 +293,26 @@
     }
 
     .chatItem{
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.04);
-      border-radius: 18px;
+      border: 1px solid rgba(2,6,23,.10);
+      background: rgba(255,255,255,.92);
+      border-radius: 16px;
       padding: 10px 10px;
       cursor:pointer;
-      transition: .15s background, .15s border, .15s transform;
+      transition: .15s background, .15s border, .15s transform, .15s box-shadow;
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
       gap:10px;
+      box-shadow: 0 10px 22px rgba(2,6,23,.06);
     }
     .chatItem:hover{
-      background: rgba(255,255,255,.06);
-      border-color: rgba(255,255,255,.18);
+      border-color: rgba(2,6,23,.14);
       transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(2,6,23,.10);
     }
     .chatItem.active{
-      border-color: rgba(34,197,94,.34);
-      background: linear-gradient(135deg, rgba(34,197,94,.14), rgba(255,255,255,.03));
+      border-color: rgba(22,163,74,.35);
+      box-shadow: 0 18px 40px rgba(22,163,74,.10);
     }
 
     .chatItem .meta{
@@ -315,7 +322,7 @@
       gap:4px;
     }
     .chatItem .name{
-      font-weight: 950;
+      font-weight: 900;
       font-size: 13px;
       white-space:nowrap;
       overflow:hidden;
@@ -331,7 +338,7 @@
     }
     .chatItem .when{
       font-size:11px;
-      color: rgba(167,184,174,.85);
+      color: rgba(90,103,118,.85);
     }
     .miniBtns{
       display:flex;
@@ -343,14 +350,13 @@
     /* Main */
     .main{
       display:grid;
-      grid-template-rows: auto 1fr auto;
+      grid-template-rows: auto 1fr auto auto;
     }
 
     .mainHeader{
       padding: 14px 14px 12px;
-      border-bottom: 1px solid var(--border);
-      background: linear-gradient(180deg, rgba(8,19,13,.92), rgba(8,19,13,.60));
-      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(2,6,23,.08);
+      background: rgba(255,255,255,.70);
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -363,10 +369,10 @@
       gap:2px;
     }
     .mainHeader .left .t{
-      font-weight: 950;
+      font-weight: 900;
       text-transform: uppercase;
       letter-spacing:.45px;
-      font-size: 12.5px;
+      font-size: 12px;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
@@ -383,17 +389,17 @@
       font-size: 12px;
       padding: 2px 8px;
       border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.04);
-      color: #DFF7E7;
+      border: 1px solid rgba(2,6,23,.10);
+      background: rgba(255,255,255,.92);
+      color: rgba(11,18,32,.86);
     }
 
     .chatBox{
       padding: 14px;
       overflow:auto;
       background:
-        radial-gradient(1200px 720px at 50% 0%, rgba(34,197,94,.08), transparent 55%),
-        rgba(10,15,20,.30);
+        radial-gradient(900px 480px at 50% 0%, rgba(34,197,94,.08), transparent 55%),
+        rgba(255,255,255,.60);
     }
 
     .msgRow{
@@ -406,47 +412,45 @@
     .avatar{
       width: 38px; height: 38px;
       border-radius: 14px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(2,6,23,.10);
+      background: rgba(255,255,255,.92);
       display:grid;
       place-items:center;
-      font-weight: 950;
-      color: var(--muted);
+      font-weight: 900;
+      color: rgba(90,103,118,.92);
       flex: 0 0 auto;
       user-select:none;
+      box-shadow: 0 10px 22px rgba(2,6,23,.06);
     }
     .avatar.user{
-      border-color: rgba(34,197,94,.26);
-      color: #C9FBD8;
-      background: rgba(34,197,94,.08);
+      border-color: rgba(22,163,74,.20);
+      color: rgba(22,163,74,.95);
+      background: rgba(34,197,94,.12);
     }
     .avatar.bot{
-      border-color: rgba(255,255,255,.14);
-      color: #EAF7F0;
+      color: rgba(11,18,32,.90);
     }
 
     .bubble{
-      max-width: 860px;
+      max-width: 880px;
       padding: 12px 12px;
-      border-radius: 18px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.04);
+      border-radius: 16px;
+      border: 1px solid rgba(2,6,23,.10);
+      background: rgba(255,255,255,.92);
       white-space:pre-wrap;
       word-break:break-word;
       line-height:1.35;
+      box-shadow: 0 10px 22px rgba(2,6,23,.06);
     }
     .bubble.user{
-      border-color: rgba(34,197,94,.22);
-      background: rgba(34,197,94,.10);
-    }
-    .bubble.bot{
-      border-color: rgba(255,255,255,.12);
+      border-color: rgba(22,163,74,.20);
+      background: rgba(34,197,94,.12);
     }
 
     .time{
       margin-top: 6px;
       font-size: 11px;
-      color: rgba(167,184,174,.86);
+      color: rgba(90,103,118,.82);
     }
 
     .typing{
@@ -456,7 +460,7 @@
     }
     .typing span{
       width:7px; height:7px; border-radius:99px;
-      background: rgba(255,255,255,.42);
+      background: rgba(11,18,32,.30);
       animation: bounce 1s infinite ease-in-out;
     }
     .typing span:nth-child(2){ animation-delay:.12s }
@@ -468,27 +472,30 @@
 
     .composer{
       padding: 12px 14px 14px;
-      border-top: 1px solid var(--border);
-      background: linear-gradient(0deg, rgba(8,19,13,.92), rgba(8,19,13,.60));
+      border-top: 1px solid rgba(2,6,23,.08);
+      background: rgba(255,255,255,.70);
       display:flex;
       gap: 10px;
       align-items:flex-end;
     }
+
     textarea{
       width:100%;
       min-height: 48px;
       max-height: 160px;
       resize:none;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.04);
+      border-radius: 14px;
+      border: 1px solid rgba(2,6,23,.10);
+      background: rgba(255,255,255,.92);
       color: var(--text);
       padding: 12px 12px;
       outline:none;
       font-size: 14px;
       line-height: 1.25;
+      transition: .15s border, .15s box-shadow;
     }
-    textarea::placeholder{ color: rgba(167,184,174,.75); }
+    textarea:focus{ border-color: rgba(22,163,74,.30); box-shadow: var(--focus); }
+    textarea::placeholder{ color: rgba(90,103,118,.70); }
 
     .footNote{
       padding: 10px 14px 12px;
@@ -498,29 +505,29 @@
       justify-content:space-between;
       gap:10px;
       flex-wrap:wrap;
-      border-top: 1px solid rgba(255,255,255,.06);
-      background: rgba(0,0,0,.08);
+      border-top: 1px solid rgba(2,6,23,.06);
+      background: rgba(255,255,255,.62);
     }
     a.link{
-      color: #C9FBD8;
+      color: rgba(22,163,74,.95);
       text-decoration:none;
-      border-bottom: 1px dashed rgba(201,251,216,.55);
+      border-bottom: 1px dashed rgba(22,163,74,.35);
     }
 
-    /* Scrollbars (nice) */
+    /* Scrollbars */
     .chatBox::-webkit-scrollbar,
     .chatList::-webkit-scrollbar{
       width: 10px;
     }
     .chatBox::-webkit-scrollbar-thumb,
     .chatList::-webkit-scrollbar-thumb{
-      background: rgba(255,255,255,.10);
+      background: rgba(2,6,23,.12);
       border-radius: 999px;
-      border: 2px solid rgba(0,0,0,.2);
+      border: 2px solid rgba(255,255,255,.7);
     }
     .chatBox::-webkit-scrollbar-thumb:hover,
     .chatList::-webkit-scrollbar-thumb:hover{
-      background: rgba(255,255,255,.16);
+      background: rgba(2,6,23,.18);
     }
   </style>
 </head>
@@ -531,9 +538,8 @@
     <div class="topbar">
       <div class="brand">
         <div class="logoWrap" title="FRIJOBOT">
-          <!-- Logo file must exist in repo root: logo.png -->
           <img src="logo.png" alt="Logo FRIJOBOT"
-               onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, rgba(34,197,94,.22), rgba(255,255,255,.06))';" />
+               onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, rgba(34,197,94,.20), rgba(2,6,23,.04))';" />
         </div>
         <div class="brandText">
           <div class="title">FRIJOBOT</div>
@@ -601,7 +607,7 @@
   // CONFIG
   // =========================
   const WEBHOOK_URL = "https://auto.mindtrax.io/webhook/chat";
-  const STORE_KEY = "frijobot_store_v2"; // bump version
+  const STORE_KEY = "frijobot_store_v2";
 
   function uid(){
     return Math.random().toString(16).slice(2) + Date.now().toString(16);
@@ -819,21 +825,13 @@
     renderChat(store);
   }
 
-  // =========================
-  // Reply extraction (HARDENED)
-  // Fix: stops printing JSON arrays/objects; extracts real text.
-  // =========================
   function extractReply(d){
-    // 1) direct strings
     if (typeof d === "string") return d;
-
-    // 2) common keys
     if (d && typeof d.reply === "string") return d.reply;
     if (d && typeof d.output === "string") return d.output;
     if (d && typeof d.text === "string") return d.text;
     if (d && typeof d.message === "string") return d.message;
 
-    // 3) arrays: n8n often returns [{ output: "..." }]
     if (Array.isArray(d)){
       if (d.length === 0) return "Sin respuesta.";
       const first = d[0];
@@ -842,9 +840,6 @@
       if (first?.output) return first.output;
       if (first?.text) return first.text;
       if (first?.message) return first.message;
-
-      // If array of objects but not sure:
-      // try to find any string field
       for (const item of d){
         if (!item || typeof item !== "object") continue;
         for (const k of ["reply","output","text","message","answer","result"]){
@@ -854,7 +849,6 @@
       return JSON.stringify(d);
     }
 
-    // 4) nested keys
     if (d && d.data && Array.isArray(d.data)){
       const x = d.data[0];
       if (x?.reply) return x.reply;
@@ -863,7 +857,6 @@
       if (x?.message) return x.message;
     }
 
-    // 5) if response contains { output: [ { ... } ] } etc.
     if (d && typeof d === "object"){
       for (const k of ["reply","output","text","message","answer","result"]){
         if (typeof d[k] === "string") return d[k];
@@ -874,13 +867,9 @@
         }
       }
     }
-
     return JSON.stringify(d);
   }
 
-  // =========================
-  // Messaging
-  // =========================
   async function send(){
     const text = (input.value || "").trim();
     if(!text) return;
@@ -900,7 +889,6 @@
     chatBox.scrollTop = chatBox.scrollHeight;
 
     try{
-      // stable per chat
       const sessionId = chat.id;
 
       const res = await fetch(WEBHOOK_URL, {
@@ -941,7 +929,6 @@
     }
   }
 
-  // Buttons / events
   sendBtn.addEventListener("click", send);
   input.addEventListener("keydown", (e)=>{
     if(e.key === "Enter" && !e.shiftKey){
@@ -1001,7 +988,6 @@
     alert("FRIJOBOT procesa tus mensajes para responder con datos. Evita compartir información sensible si no es necesario.");
   });
 
-  // Init
   (function init(){
     let store = loadStore();
     if(!store.chats || store.chats.length === 0){
