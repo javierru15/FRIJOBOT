@@ -1,1006 +1,413 @@
-<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>FRIJOBOT</title>
-  <meta name="description" content="FRIJOBOT — Asistente inteligente conectado a tu operación." />
-  <meta name="theme-color" content="#F6F8F7" />
+<style>
+  :root{
+    /* Light + minimal (Traxión accent) */
+    --bg0:#F6F8FB;
+    --bg1:#EEF2F7;
 
-  <style>
-    :root{
-      /* Light, minimal, premium (Traxión-ish accent) */
-      --bg0:#F6F8F7;
-      --bg1:#FFFFFF;
+    --surface:#FFFFFF;
+    --surface2:#F8FAFC;
 
-      --surface:#FFFFFF;
-      --surface2:rgba(255,255,255,.78);
+    --border: rgba(15, 23, 42, .10);   /* slate */
+    --border2: rgba(15, 23, 42, .16);
 
-      --border: rgba(2, 6, 23, .10);
-      --border2: rgba(2, 6, 23, .16);
+    --text:#0F172A;     /* slate-900 */
+    --muted:#64748B;    /* slate-500 */
 
-      --text:#0B1220;        /* slate-ish */
-      --muted:#5A6776;       /* secondary */
-      --muted2:#7B8796;
+    --brand:#16A34A;    /* green */
+    --brand2:#22C55E;
 
-      --brand:#16A34A;       /* green */
-      --brand2:#22C55E;
-      --danger:#DC2626;
-      --warn:#D97706;
+    --danger:#DC2626;
+    --warn:#F59E0B;
 
-      --shadow: 0 18px 50px rgba(2,6,23,.10);
-      --shadow2: 0 10px 26px rgba(2,6,23,.08);
+    --shadow: 0 12px 30px rgba(15,23,42,.10);
+    --shadow2: 0 6px 18px rgba(15,23,42,.08);
 
-      --r: 14px;
-      --r2: 18px;
+    --r: 16px;
+    --r2: 20px;
 
-      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-
-      --focus: 0 0 0 4px rgba(34,197,94,.18);
-    }
-
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
-    body{
-      margin:0;
-      font-family: var(--font);
-      color: var(--text);
-      background:
-        radial-gradient(900px 500px at 12% 8%, rgba(34,197,94,.12), transparent 55%),
-        radial-gradient(900px 520px at 86% 10%, rgba(34,197,94,.08), transparent 55%),
-        linear-gradient(180deg, var(--bg0), var(--bg1));
-      overflow-x:hidden;
-    }
-
-    /* Subtle grid + grain (very light) */
-    body:before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background-image:
-        linear-gradient(rgba(2,6,23,.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(2,6,23,.03) 1px, transparent 1px);
-      background-size: 44px 44px;
-      opacity:.35;
-      mask-image: radial-gradient(700px 420px at 50% 0%, black 10%, transparent 65%);
-    }
-
-    .wrap{
-      width:min(1280px, 100%);
-      margin:0 auto;
-      padding: 18px 16px 26px;
-    }
-
-    /* Header */
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      padding: 12px 14px;
-      border-radius: var(--r2);
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.72);
-      backdrop-filter: blur(12px);
-      box-shadow: var(--shadow2);
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width:0;
-    }
-
-    .logoWrap{
-      width:44px; height:44px;
-      border-radius: 14px;
-      overflow:hidden;
-      border: 1px solid rgba(22,163,74,.25);
-      background: linear-gradient(135deg, rgba(34,197,94,.20), rgba(2,6,23,.04));
-      box-shadow: 0 12px 30px rgba(22,163,74,.10);
-      display:grid;
-      place-items:center;
-      flex:0 0 auto;
-    }
-    .logoWrap img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-
-    .brandText{
-      min-width:0;
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-    }
-    .brandText .title{
-      font-weight: 900;
-      letter-spacing:.4px;
-      text-transform: uppercase;
-      font-size: 13px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .brandText .subtitle{
-      font-size: 12px;
-      color: var(--muted);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .rightTop{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex:0 0 auto;
-    }
-
-    .pill{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.72);
-      backdrop-filter: blur(10px);
-      font-size: 12px;
-      color: var(--muted);
-    }
-    .dot{
-      width:10px; height:10px; border-radius:999px;
-      background: var(--danger);
-      box-shadow: 0 0 0 4px rgba(220,38,38,.12);
-    }
-    .dot.ok{
-      background: var(--brand2);
-      box-shadow: 0 0 0 4px rgba(34,197,94,.16);
-    }
-
-    .btn{
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.85);
-      color: var(--text);
-      border-radius: 12px;
-      padding: 10px 12px;
-      font-weight: 800;
-      cursor:pointer;
-      transition: .15s transform, .15s background, .15s border, .15s box-shadow;
-      box-shadow: 0 8px 18px rgba(2,6,23,.06);
-    }
-    .btn:hover{
-      background: rgba(255,255,255,.95);
-      border-color: var(--border2);
-      box-shadow: 0 12px 26px rgba(2,6,23,.10);
-    }
-    .btn:active{ transform: translateY(1px); }
-    .btn:focus{ outline:none; box-shadow: var(--focus), 0 12px 26px rgba(2,6,23,.10); }
-
-    .btn.primary{
-      border-color: rgba(22,163,74,.25);
-      background: linear-gradient(135deg, rgba(34,197,94,.22), rgba(255,255,255,.90));
-    }
-
-    /* Layout */
-    .shell{
-      margin-top: 14px;
-      display:grid;
-      grid-template-columns: 360px 1fr;
-      gap: 14px;
-      align-items: stretch;
-    }
-
-    @media (max-width: 980px){
-      .shell{ grid-template-columns: 1fr; }
-    }
-
-    /* Panels */
-    .panel{
-      border-radius: var(--r2);
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.78);
-      backdrop-filter: blur(12px);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      min-height: 600px;
-    }
-
-    /* Sidebar header */
-    .sidebarHeader{
-      padding: 14px 14px 12px;
-      border-bottom: 1px solid rgba(2,6,23,.08);
-      background: rgba(255,255,255,.70);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-    }
-    .sidebarHeader .h{
-      min-width:0;
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-    }
-    .sidebarHeader .h .t{
-      font-weight:900;
-      text-transform:uppercase;
-      font-size: 12px;
-      letter-spacing:.45px;
-      color: rgba(11,18,32,.88);
-    }
-    .sidebarHeader .h .s{
-      font-size:12px;
-      color: var(--muted);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .iconBtn{
-      width:40px;
-      height:40px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.90);
-      color: var(--text);
-      cursor:pointer;
-      display:grid;
-      place-items:center;
-      font-weight: 900;
-      transition:.15s background,.15s border,.15s box-shadow;
-      box-shadow: 0 8px 18px rgba(2,6,23,.06);
-    }
-    .iconBtn:hover{
-      border-color: var(--border2);
-      box-shadow: 0 12px 26px rgba(2,6,23,.10);
-    }
-
-    .sideBody{
-      padding: 12px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-
-    .search{
-      width:100%;
-      border:1px solid rgba(2,6,23,.10);
-      background: rgba(255,255,255,.92);
-      border-radius: 14px;
-      padding: 10px 12px;
-      color: var(--text);
-      outline:none;
-      font-size: 13px;
-      transition: .15s border, .15s box-shadow;
-    }
-    .search:focus{ border-color: rgba(22,163,74,.30); box-shadow: var(--focus); }
-    .search::placeholder{ color: rgba(90,103,118,.75); }
-
-    .chatList{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      max-height: 520px;
-      overflow:auto;
-      padding-right: 4px;
-    }
-
-    .chatItem{
-      border: 1px solid rgba(2,6,23,.10);
-      background: rgba(255,255,255,.92);
-      border-radius: 16px;
-      padding: 10px 10px;
-      cursor:pointer;
-      transition: .15s background, .15s border, .15s transform, .15s box-shadow;
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:10px;
-      box-shadow: 0 10px 22px rgba(2,6,23,.06);
-    }
-    .chatItem:hover{
-      border-color: rgba(2,6,23,.14);
-      transform: translateY(-1px);
-      box-shadow: 0 14px 30px rgba(2,6,23,.10);
-    }
-    .chatItem.active{
-      border-color: rgba(22,163,74,.35);
-      box-shadow: 0 18px 40px rgba(22,163,74,.10);
-    }
-
-    .chatItem .meta{
-      min-width:0;
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-    }
-    .chatItem .name{
-      font-weight: 900;
-      font-size: 13px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .chatItem .snippet{
-      font-size:12px;
-      color: var(--muted);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      max-width: 250px;
-    }
-    .chatItem .when{
-      font-size:11px;
-      color: rgba(90,103,118,.85);
-    }
-    .miniBtns{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      flex:0 0 auto;
-    }
-
-    /* Main */
-    .main{
-      display:grid;
-      grid-template-rows: auto 1fr auto auto;
-    }
-
-    .mainHeader{
-      padding: 14px 14px 12px;
-      border-bottom: 1px solid rgba(2,6,23,.08);
-      background: rgba(255,255,255,.70);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-    }
-    .mainHeader .left{
-      min-width:0;
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-    }
-    .mainHeader .left .t{
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing:.45px;
-      font-size: 12px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .mainHeader .left .s{
-      font-size:12px;
-      color: var(--muted);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .codePill{
-      font-family: var(--mono);
-      font-size: 12px;
-      padding: 2px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(2,6,23,.10);
-      background: rgba(255,255,255,.92);
-      color: rgba(11,18,32,.86);
-    }
-
-    .chatBox{
-      padding: 14px;
-      overflow:auto;
-      background:
-        radial-gradient(900px 480px at 50% 0%, rgba(34,197,94,.08), transparent 55%),
-        rgba(255,255,255,.60);
-    }
-
-    .msgRow{
-      display:flex;
-      gap:10px;
-      margin: 10px 0;
-      align-items:flex-start;
-    }
-
-    .avatar{
-      width: 38px; height: 38px;
-      border-radius: 14px;
-      border: 1px solid rgba(2,6,23,.10);
-      background: rgba(255,255,255,.92);
-      display:grid;
-      place-items:center;
-      font-weight: 900;
-      color: rgba(90,103,118,.92);
-      flex: 0 0 auto;
-      user-select:none;
-      box-shadow: 0 10px 22px rgba(2,6,23,.06);
-    }
-    .avatar.user{
-      border-color: rgba(22,163,74,.20);
-      color: rgba(22,163,74,.95);
-      background: rgba(34,197,94,.12);
-    }
-    .avatar.bot{
-      color: rgba(11,18,32,.90);
-    }
-
-    .bubble{
-      max-width: 880px;
-      padding: 12px 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(2,6,23,.10);
-      background: rgba(255,255,255,.92);
-      white-space:pre-wrap;
-      word-break:break-word;
-      line-height:1.35;
-      box-shadow: 0 10px 22px rgba(2,6,23,.06);
-    }
-    .bubble.user{
-      border-color: rgba(22,163,74,.20);
-      background: rgba(34,197,94,.12);
-    }
-
-    .time{
-      margin-top: 6px;
-      font-size: 11px;
-      color: rgba(90,103,118,.82);
-    }
-
-    .typing{
-      display:inline-flex;
-      gap:6px;
-      align-items:center;
-    }
-    .typing span{
-      width:7px; height:7px; border-radius:99px;
-      background: rgba(11,18,32,.30);
-      animation: bounce 1s infinite ease-in-out;
-    }
-    .typing span:nth-child(2){ animation-delay:.12s }
-    .typing span:nth-child(3){ animation-delay:.24s }
-    @keyframes bounce{
-      0%,80%,100%{ transform: translateY(0); opacity:.55 }
-      40%{ transform: translateY(-6px); opacity:1 }
-    }
-
-    .composer{
-      padding: 12px 14px 14px;
-      border-top: 1px solid rgba(2,6,23,.08);
-      background: rgba(255,255,255,.70);
-      display:flex;
-      gap: 10px;
-      align-items:flex-end;
-    }
-
-    textarea{
-      width:100%;
-      min-height: 48px;
-      max-height: 160px;
-      resize:none;
-      border-radius: 14px;
-      border: 1px solid rgba(2,6,23,.10);
-      background: rgba(255,255,255,.92);
-      color: var(--text);
-      padding: 12px 12px;
-      outline:none;
-      font-size: 14px;
-      line-height: 1.25;
-      transition: .15s border, .15s box-shadow;
-    }
-    textarea:focus{ border-color: rgba(22,163,74,.30); box-shadow: var(--focus); }
-    textarea::placeholder{ color: rgba(90,103,118,.70); }
-
-    .footNote{
-      padding: 10px 14px 12px;
-      font-size: 12px;
-      color: var(--muted);
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-      border-top: 1px solid rgba(2,6,23,.06);
-      background: rgba(255,255,255,.62);
-    }
-    a.link{
-      color: rgba(22,163,74,.95);
-      text-decoration:none;
-      border-bottom: 1px dashed rgba(22,163,74,.35);
-    }
-
-    /* Scrollbars */
-    .chatBox::-webkit-scrollbar,
-    .chatList::-webkit-scrollbar{
-      width: 10px;
-    }
-    .chatBox::-webkit-scrollbar-thumb,
-    .chatList::-webkit-scrollbar-thumb{
-      background: rgba(2,6,23,.12);
-      border-radius: 999px;
-      border: 2px solid rgba(255,255,255,.7);
-    }
-    .chatBox::-webkit-scrollbar-thumb:hover,
-    .chatList::-webkit-scrollbar-thumb:hover{
-      background: rgba(2,6,23,.18);
-    }
-  </style>
-</head>
-
-<body>
-  <div class="wrap">
-    <!-- Header -->
-    <div class="topbar">
-      <div class="brand">
-        <div class="logoWrap" title="FRIJOBOT">
-          <img src="logo.png" alt="Logo FRIJOBOT"
-               onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, rgba(34,197,94,.20), rgba(2,6,23,.04))';" />
-        </div>
-        <div class="brandText">
-          <div class="title">FRIJOBOT</div>
-          <div class="subtitle">Traxión · Vida en movimiento · Asistente para operación y datos</div>
-        </div>
-      </div>
-
-      <div class="rightTop">
-        <div class="pill" title="Estado de conexión">
-          <span class="dot" id="statusDot"></span>
-          <span id="statusText">Sin conectar</span>
-        </div>
-        <button class="btn" id="newChatBtn">Nuevo chat</button>
-        <button class="btn primary" id="clearAllBtn">Limpiar todo</button>
-      </div>
-    </div>
-
-    <!-- App -->
-    <div class="shell">
-      <!-- Sidebar -->
-      <aside class="panel sidebar">
-        <div class="sidebarHeader">
-          <div class="h">
-            <div class="t">Conversaciones</div>
-            <div class="s">Guardadas en este navegador</div>
-          </div>
-          <button class="iconBtn" id="exportBtn" title="Exportar historial">⤓</button>
-        </div>
-
-        <div class="sideBody">
-          <input class="search" id="search" placeholder="Buscar conversación..." />
-          <div class="chatList" id="chatList"></div>
-        </div>
-      </aside>
-
-      <!-- Main -->
-      <main class="panel main">
-        <div class="mainHeader">
-          <div class="left">
-            <div class="t" id="chatTitle">Chat</div>
-            <div class="s">
-              Tip: Enter envía · Shift+Enter salto · Endpoint <span class="codePill">/webhook/chat</span>
-            </div>
-          </div>
-          <button class="btn" id="clearChatBtn">Limpiar chat</button>
-        </div>
-
-        <div class="chatBox" id="chatBox"></div>
-
-        <div class="footNote">
-          <div>Evita compartir información sensible innecesaria.</div>
-          <div><a href="#" class="link" id="privacy">Aviso</a></div>
-        </div>
-
-        <div class="composer">
-          <textarea id="input" placeholder="Escribe tu pregunta…"></textarea>
-          <button class="btn primary" id="sendBtn">Enviar</button>
-        </div>
-      </main>
-    </div>
-  </div>
-
-<script>
-  // =========================
-  // CONFIG
-  // =========================
-  const WEBHOOK_URL = "https://auto.mindtrax.io/webhook/chat";
-  const STORE_KEY = "frijobot_store_v2";
-
-  function uid(){
-    return Math.random().toString(16).slice(2) + Date.now().toString(16);
+    --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   }
 
-  function nowStr(){
-    const d = new Date();
-    return d.toLocaleString([], { day:"2-digit", month:"short", hour:"2-digit", minute:"2-digit" });
+  *{ box-sizing:border-box; }
+  html,body{ height:100%; }
+
+  body{
+    margin:0;
+    font-family: var(--font);
+    color: var(--text);
+    background:
+      radial-gradient(900px 560px at 12% 8%, rgba(34,197,94,.16), transparent 60%),
+      radial-gradient(900px 520px at 90% 6%, rgba(34,197,94,.10), transparent 55%),
+      linear-gradient(180deg, var(--bg0), var(--bg1));
+    overflow-x:hidden;
   }
 
-  function loadStore(){
-    try{
-      return JSON.parse(localStorage.getItem(STORE_KEY)) || { activeId: null, chats: [] };
-    }catch{
-      return { activeId: null, chats: [] };
-    }
+  /* Container */
+  .wrap{
+    width:min(1280px, 100%);
+    margin:0 auto;
+    padding: 18px 16px 26px;
   }
 
-  function saveStore(store){
-    localStorage.setItem(STORE_KEY, JSON.stringify(store));
+  /* Header */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    padding: 12px 14px;
+    border-radius: var(--r2);
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.78);
+    box-shadow: var(--shadow2);
   }
 
-  function createChat(name="Chat"){
-    return {
-      id: uid(),
-      name,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-      messages: [
-        { role: "bot", text: "Hola 👋 Soy FRIJOBOT. ¿Qué quieres analizar hoy?", ts: Date.now() }
-      ]
-    };
+  .brand{ display:flex; align-items:center; gap:12px; min-width:0; }
+
+  .logoWrap{
+    width:46px; height:46px;
+    border-radius: 14px;
+    overflow:hidden;
+    border: 1px solid rgba(22,163,74,.25);
+    background: linear-gradient(135deg, rgba(34,197,94,.14), rgba(15,23,42,.04));
+    display:grid;
+    place-items:center;
+    flex:0 0 auto;
+  }
+  .logoWrap img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+  .brandText{ min-width:0; display:flex; flex-direction:column; gap:2px; }
+  .brandText .title{
+    font-weight: 900;
+    letter-spacing:.4px;
+    text-transform: uppercase;
+    font-size: 14px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .brandText .subtitle{
+    font-size: 12px;
+    color: var(--muted);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
   }
 
-  // DOM
-  const chatList = document.getElementById("chatList");
-  const chatBox  = document.getElementById("chatBox");
-  const input    = document.getElementById("input");
-  const sendBtn  = document.getElementById("sendBtn");
-  const clearChatBtn = document.getElementById("clearChatBtn");
-  const clearAllBtn  = document.getElementById("clearAllBtn");
-  const newChatBtn   = document.getElementById("newChatBtn");
-  const exportBtn    = document.getElementById("exportBtn");
-  const search       = document.getElementById("search");
-  const chatTitle    = document.getElementById("chatTitle");
-  const statusDot    = document.getElementById("statusDot");
-  const statusText   = document.getElementById("statusText");
+  .rightTop{ display:flex; align-items:center; gap:10px; flex:0 0 auto; }
 
-  function setStatus(ok, text){
-    statusDot.classList.toggle("ok", !!ok);
-    statusText.textContent = text;
+  .pill{
+    display:flex; align-items:center; gap:10px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.8);
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .dot{
+    width:10px; height:10px; border-radius:999px;
+    background: var(--danger);
+    box-shadow: 0 0 0 4px rgba(220,38,38,.10);
+  }
+  .dot.ok{
+    background: var(--brand2);
+    box-shadow: 0 0 0 4px rgba(34,197,94,.14);
   }
 
-  function escapeText(t){ return (t ?? "").toString(); }
+  .btn{
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.85);
+    color: var(--text);
+    border-radius: 14px;
+    padding: 10px 12px;
+    font-weight: 800;
+    cursor:pointer;
+    transition: .15s transform, .15s background, .15s border, .15s box-shadow;
+    box-shadow: 0 6px 16px rgba(15,23,42,.08);
+  }
+  .btn:hover{
+    background: #fff;
+    border-color: var(--border2);
+    box-shadow: 0 10px 22px rgba(15,23,42,.10);
+  }
+  .btn:active{ transform: translateY(1px); }
 
-  function renderMessage(msg){
-    const row = document.createElement("div");
-    row.className = "msgRow";
-
-    const avatar = document.createElement("div");
-    avatar.className = "avatar " + (msg.role === "user" ? "user" : "bot");
-    avatar.textContent = msg.role === "user" ? "Tú" : "F";
-
-    const bubble = document.createElement("div");
-    bubble.className = "bubble " + (msg.role === "user" ? "user" : "bot");
-    bubble.textContent = escapeText(msg.text);
-
-    const time = document.createElement("div");
-    time.className = "time";
-    time.textContent = new Date(msg.ts).toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
-
-    const col = document.createElement("div");
-    col.appendChild(bubble);
-    col.appendChild(time);
-
-    row.appendChild(avatar);
-    row.appendChild(col);
-    return row;
+  .btn.primary{
+    border-color: rgba(22,163,74,.28);
+    background: linear-gradient(135deg, rgba(34,197,94,.22), rgba(255,255,255,.90));
   }
 
-  function renderTyping(){
-    const row = document.createElement("div");
-    row.className = "msgRow";
-
-    const avatar = document.createElement("div");
-    avatar.className = "avatar bot";
-    avatar.textContent = "F";
-
-    const bubble = document.createElement("div");
-    bubble.className = "bubble bot";
-    bubble.innerHTML = `<span class="typing"><span></span><span></span><span></span></span>`;
-
-    const time = document.createElement("div");
-    time.className = "time";
-    time.textContent = new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
-
-    const col = document.createElement("div");
-    col.appendChild(bubble);
-    col.appendChild(time);
-
-    row.appendChild(avatar);
-    row.appendChild(col);
-    return row;
+  /* App layout */
+  .shell{
+    margin-top: 14px;
+    display:grid;
+    grid-template-columns: 360px 1fr;
+    gap: 14px;
+    align-items: stretch;
+  }
+  @media (max-width: 980px){
+    .shell{ grid-template-columns: 1fr; }
+    .sidebar{ order: 2; }
+    .main{ order: 1; }
   }
 
-  function getActiveChat(store){
-    return store.chats.find(c => c.id === store.activeId) || null;
+  /* Panels */
+  .panel{
+    border-radius: var(--r2);
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.72);
+    box-shadow: var(--shadow);
+    overflow:hidden;
+    min-height: 580px;
   }
 
-  function snippetFromChat(chat){
-    const last = chat.messages[chat.messages.length - 1];
-    const t = last?.text || "";
-    return t.length > 60 ? t.slice(0,60) + "…" : t;
+  /* Sidebar */
+  .sidebarHeader{
+    padding: 14px 14px 12px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,.85);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .sidebarHeader .h{ min-width:0; display:flex; flex-direction:column; gap:2px; }
+  .sidebarHeader .h .t{
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 12.5px;
+    letter-spacing:.4px;
+  }
+  .sidebarHeader .h .s{
+    font-size:12px;
+    color: var(--muted);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
   }
 
-  function renderSidebar(store){
-    const q = (search.value || "").trim().toLowerCase();
-    chatList.innerHTML = "";
+  .iconBtn{
+    width:38px; height:38px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.85);
+    color: var(--text);
+    cursor:pointer;
+    display:grid;
+    place-items:center;
+    font-weight: 900;
+  }
+  .iconBtn:hover{ border-color: var(--border2); background:#fff; }
 
-    const chats = [...store.chats].sort((a,b) => b.updatedAt - a.updatedAt)
-      .filter(c => !q || c.name.toLowerCase().includes(q) || snippetFromChat(c).toLowerCase().includes(q));
-
-    chats.forEach(chat => {
-      const item = document.createElement("div");
-      item.className = "chatItem " + (chat.id === store.activeId ? "active" : "");
-
-      const meta = document.createElement("div");
-      meta.className = "meta";
-
-      const name = document.createElement("div");
-      name.className = "name";
-      name.textContent = chat.name;
-
-      const snip = document.createElement("div");
-      snip.className = "snippet";
-      snip.textContent = snippetFromChat(chat);
-
-      const when = document.createElement("div");
-      when.className = "when";
-      when.textContent = new Date(chat.updatedAt).toLocaleString([], { day:"2-digit", month:"short", hour:"2-digit", minute:"2-digit" });
-
-      meta.appendChild(name);
-      meta.appendChild(snip);
-      meta.appendChild(when);
-
-      const mini = document.createElement("div");
-      mini.className = "miniBtns";
-
-      const renameBtn = document.createElement("button");
-      renameBtn.className = "iconBtn";
-      renameBtn.title = "Renombrar";
-      renameBtn.textContent = "✎";
-      renameBtn.onclick = (e)=>{
-        e.stopPropagation();
-        const n = prompt("Nombre de la conversación:", chat.name);
-        if(n && n.trim()){
-          chat.name = n.trim();
-          chat.updatedAt = Date.now();
-          saveStore(store);
-          renderAll(store);
-        }
-      };
-
-      const delBtn = document.createElement("button");
-      delBtn.className = "iconBtn";
-      delBtn.title = "Eliminar";
-      delBtn.textContent = "🗑";
-      delBtn.onclick = (e)=>{
-        e.stopPropagation();
-        if(!confirm("¿Eliminar esta conversación?")) return;
-        store.chats = store.chats.filter(c => c.id !== chat.id);
-        if(store.activeId === chat.id){
-          store.activeId = store.chats[0]?.id || null;
-        }
-        if(!store.activeId && store.chats.length === 0){
-          const c = createChat("Chat");
-          store.chats.push(c);
-          store.activeId = c.id;
-        }
-        saveStore(store);
-        renderAll(store);
-      };
-
-      mini.appendChild(renameBtn);
-      mini.appendChild(delBtn);
-
-      item.appendChild(meta);
-      item.appendChild(mini);
-
-      item.onclick = ()=>{
-        store.activeId = chat.id;
-        saveStore(store);
-        renderAll(store);
-      };
-
-      chatList.appendChild(item);
-    });
+  .sideBody{
+    padding: 12px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
   }
 
-  function renderChat(store){
-    const chat = getActiveChat(store);
-    chatBox.innerHTML = "";
-    if(!chat) return;
+  .search{
+    width:100%;
+    border:1px solid var(--border);
+    background: rgba(255,255,255,.9);
+    border-radius: 16px;
+    padding: 10px 12px;
+    color: var(--text);
+    outline:none;
+    font-size: 13px;
+  }
+  .search::placeholder{ color: rgba(100,116,139,.85); }
 
-    chatTitle.textContent = chat.name;
-
-    chat.messages.forEach(m => {
-      chatBox.appendChild(renderMessage(m));
-    });
-    chatBox.scrollTop = chatBox.scrollHeight;
+  .chatList{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    max-height: 520px;
+    overflow:auto;
+    padding-right: 4px;
   }
 
-  function renderAll(store){
-    renderSidebar(store);
-    renderChat(store);
+  .chatItem{
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.88);
+    border-radius: 18px;
+    padding: 10px 10px;
+    cursor:pointer;
+    transition: .15s background, .15s border, .15s transform;
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .chatItem:hover{
+    background: #fff;
+    border-color: var(--border2);
+    transform: translateY(-1px);
+  }
+  .chatItem.active{
+    border-color: rgba(22,163,74,.35);
+    box-shadow: 0 10px 22px rgba(22,163,74,.10);
   }
 
-  function extractReply(d){
-    if (typeof d === "string") return d;
-    if (d && typeof d.reply === "string") return d.reply;
-    if (d && typeof d.output === "string") return d.output;
-    if (d && typeof d.text === "string") return d.text;
-    if (d && typeof d.message === "string") return d.message;
+  .chatItem .meta{ min-width:0; display:flex; flex-direction:column; gap:4px; }
+  .chatItem .name{ font-weight:900; font-size: 13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .chatItem .snippet{ font-size:12px; color: var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width: 250px; }
+  .chatItem .when{ font-size:11px; color: rgba(100,116,139,.85); }
+  .miniBtns{ display:flex; flex-direction:column; gap:6px; flex:0 0 auto; }
 
-    if (Array.isArray(d)){
-      if (d.length === 0) return "Sin respuesta.";
-      const first = d[0];
-      if (typeof first === "string") return first;
-      if (first?.reply) return first.reply;
-      if (first?.output) return first.output;
-      if (first?.text) return first.text;
-      if (first?.message) return first.message;
-      for (const item of d){
-        if (!item || typeof item !== "object") continue;
-        for (const k of ["reply","output","text","message","answer","result"]){
-          if (typeof item[k] === "string") return item[k];
-        }
-      }
-      return JSON.stringify(d);
-    }
+  /* Main */
+  .main{ display:grid; grid-template-rows: auto 1fr auto; }
 
-    if (d && d.data && Array.isArray(d.data)){
-      const x = d.data[0];
-      if (x?.reply) return x.reply;
-      if (x?.output) return x.output;
-      if (x?.text) return x.text;
-      if (x?.message) return x.message;
-    }
-
-    if (d && typeof d === "object"){
-      for (const k of ["reply","output","text","message","answer","result"]){
-        if (typeof d[k] === "string") return d[k];
-        if (Array.isArray(d[k])) return extractReply(d[k]);
-        if (d[k] && typeof d[k] === "object") {
-          const maybe = extractReply(d[k]);
-          if (maybe && typeof maybe === "string") return maybe;
-        }
-      }
-    }
-    return JSON.stringify(d);
+  .mainHeader{
+    padding: 14px 14px 12px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,.85);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .mainHeader .left{ min-width:0; display:flex; flex-direction:column; gap:2px; }
+  .mainHeader .left .t{
+    font-weight:900;
+    text-transform: uppercase;
+    letter-spacing:.45px;
+    font-size: 12.5px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .mainHeader .left .s{
+    font-size:12px;
+    color: var(--muted);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .codePill{
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: rgba(15,23,42,.03);
+    color: rgba(15,23,42,.85);
   }
 
-  async function send(){
-    const text = (input.value || "").trim();
-    if(!text) return;
-
-    const store = loadStore();
-    const chat = getActiveChat(store);
-    if(!chat) return;
-
-    chat.messages.push({ role:"user", text, ts: Date.now() });
-    chat.updatedAt = Date.now();
-    input.value = "";
-    saveStore(store);
-    renderAll(store);
-
-    const typingNode = renderTyping();
-    chatBox.appendChild(typingNode);
-    chatBox.scrollTop = chatBox.scrollHeight;
-
-    try{
-      const sessionId = chat.id;
-
-      const res = await fetch(WEBHOOK_URL, {
-        method: "POST",
-        headers: { "Content-Type":"application/json" },
-        body: JSON.stringify({ message: text, sessionId })
-      });
-
-      if(!res.ok){
-        const t = await res.text();
-        throw new Error(`HTTP ${res.status}: ${t}`);
-      }
-
-      const data = await res.json();
-      const reply = extractReply(data);
-
-      typingNode.remove();
-
-      chat.messages.push({ role:"bot", text: reply, ts: Date.now() });
-      chat.updatedAt = Date.now();
-      saveStore(store);
-
-      setStatus(true, "Conectado");
-      renderAll(store);
-    }catch(err){
-      typingNode.remove();
-      chat.messages.push({
-        role:"bot",
-        text: "⚠️ No pude conectar con n8n. Si a veces sí conecta, casi siempre es CORS o el webhook no está activo (producción).",
-        ts: Date.now()
-      });
-      chat.updatedAt = Date.now();
-      saveStore(store);
-
-      setStatus(false, "Error");
-      renderAll(store);
-      console.error(err);
-    }
+  .chatBox{
+    padding: 14px;
+    overflow:auto;
+    background: rgba(255,255,255,.35);
   }
 
-  sendBtn.addEventListener("click", send);
-  input.addEventListener("keydown", (e)=>{
-    if(e.key === "Enter" && !e.shiftKey){
-      e.preventDefault();
-      send();
-    }
-  });
+  .msgRow{ display:flex; gap:10px; margin: 10px 0; align-items:flex-start; }
 
-  clearChatBtn.addEventListener("click", ()=>{
-    const store = loadStore();
-    const chat = getActiveChat(store);
-    if(!chat) return;
-    if(!confirm("¿Limpiar esta conversación?")) return;
+  .avatar{
+    width: 38px; height: 38px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.85);
+    display:grid;
+    place-items:center;
+    font-weight: 900;
+    color: rgba(15,23,42,.65);
+    flex: 0 0 auto;
+    user-select:none;
+  }
+  .avatar.user{
+    border-color: rgba(22,163,74,.25);
+    background: rgba(34,197,94,.10);
+    color: rgba(15,23,42,.85);
+  }
 
-    chat.messages = [{ role:"bot", text:"Listo. ¿Qué quieres analizar ahora?", ts: Date.now() }];
-    chat.updatedAt = Date.now();
-    saveStore(store);
-    renderAll(store);
-  });
+  .bubble{
+    max-width: 860px;
+    padding: 12px 12px;
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.88);
+    white-space:pre-wrap;
+    word-break:break-word;
+    line-height:1.35;
+  }
+  .bubble.user{
+    border-color: rgba(22,163,74,.22);
+    background: rgba(34,197,94,.10);
+  }
 
-  clearAllBtn.addEventListener("click", ()=>{
-    if(!confirm("¿Borrar TODAS las conversaciones?")) return;
-    const store = { activeId: null, chats: [] };
-    const c = createChat("Chat");
-    store.chats.push(c);
-    store.activeId = c.id;
-    saveStore(store);
-    renderAll(store);
-  });
+  .time{
+    margin-top: 6px;
+    font-size: 11px;
+    color: rgba(100,116,139,.85);
+  }
 
-  newChatBtn.addEventListener("click", ()=>{
-    const store = loadStore();
-    const c = createChat("Chat " + nowStr());
-    store.chats.push(c);
-    store.activeId = c.id;
-    saveStore(store);
-    renderAll(store);
-  });
+  .typing{ display:inline-flex; gap:6px; align-items:center; }
+  .typing span{
+    width:7px; height:7px; border-radius:99px;
+    background: rgba(15,23,42,.35);
+    animation: bounce 1s infinite ease-in-out;
+  }
+  .typing span:nth-child(2){ animation-delay:.12s }
+  .typing span:nth-child(3){ animation-delay:.24s }
+  @keyframes bounce{
+    0%,80%,100%{ transform: translateY(0); opacity:.55 }
+    40%{ transform: translateY(-6px); opacity:1 }
+  }
 
-  exportBtn.addEventListener("click", ()=>{
-    const store = loadStore();
-    const blob = new Blob([JSON.stringify(store, null, 2)], {type:"application/json"});
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "frijobot_history.json";
-    a.click();
-    URL.revokeObjectURL(a.href);
-  });
+  .composer{
+    padding: 12px 14px 14px;
+    border-top: 1px solid var(--border);
+    background: rgba(255,255,255,.85);
+    display:flex;
+    gap: 10px;
+    align-items:flex-end;
+  }
 
-  search.addEventListener("input", ()=>{
-    const store = loadStore();
-    renderSidebar(store);
-  });
+  textarea{
+    width:100%;
+    min-height: 48px;
+    max-height: 160px;
+    resize:none;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.92);
+    color: var(--text);
+    padding: 12px 12px;
+    outline:none;
+    font-size: 14px;
+    line-height: 1.25;
+  }
+  textarea::placeholder{ color: rgba(100,116,139,.85); }
 
-  document.getElementById("privacy").addEventListener("click", (e)=>{
-    e.preventDefault();
-    alert("FRIJOBOT procesa tus mensajes para responder con datos. Evita compartir información sensible si no es necesario.");
-  });
+  .footNote{
+    padding: 10px 14px 12px;
+    font-size: 12px;
+    color: var(--muted);
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+    border-top: 1px solid rgba(15,23,42,.06);
+    background: rgba(255,255,255,.65);
+  }
 
-  (function init(){
-    let store = loadStore();
-    if(!store.chats || store.chats.length === 0){
-      const c = createChat("Chat");
-      store = { activeId: c.id, chats: [c] };
-      saveStore(store);
-    }else if(!store.activeId){
-      store.activeId = store.chats[0].id;
-      saveStore(store);
-    }
-    renderAll(store);
-    setStatus(false, "Sin conectar");
-  })();
-</script>
-</body>
-</html>
+  a.link{
+    color: rgba(22,163,74,.95);
+    text-decoration:none;
+    border-bottom: 1px dashed rgba(22,163,74,.35);
+  }
+
+  /* Nice scrollbars */
+  .chatBox::-webkit-scrollbar,
+  .chatList::-webkit-scrollbar{ width: 10px; }
+  .chatBox::-webkit-scrollbar-thumb,
+  .chatList::-webkit-scrollbar-thumb{
+    background: rgba(15,23,42,.12);
+    border-radius: 999px;
+    border: 2px solid rgba(255,255,255,.6);
+  }
+  .chatBox::-webkit-scrollbar-thumb:hover,
+  .chatList::-webkit-scrollbar-thumb:hover{ background: rgba(15,23,42,.18); }
+</style>
